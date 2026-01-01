@@ -21,7 +21,7 @@ export const Navbar = () => {
         { name: "Meny", href: "/meny" },
         { name: "Vår Story", href: "/story" },
         { name: "Recensioner", href: "/recensioner" },
-        { name: "Personal", href: "/#staff" },
+        { name: "Personal", href: "/personal" },
     ];
 
     return (
