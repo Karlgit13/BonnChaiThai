@@ -8,6 +8,35 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/Button";
 
 export default function LandingPage() {
+  const signatureDishes = [
+    {
+      name: "The Golden Wagyu",
+      price: "745 KR",
+      description: "Långkokt svenskt Wagyu högrev, handmortlad curry, kanderad sötpotatis, rostade pekannötter och boonk-chai röd lök.",
+      image: "/images/The Golden Wagyu.png",
+      label: "Månadens rekommendation",
+      highlight: "The Golden Wagyu"
+    },
+    {
+      name: "Lobster Pad Thai",
+      price: "595 KR",
+      description: "Färsk hummer från västkusten, tamarind-reduktion på 48 h, risnudlar från Chanthaburi, toppad med 24k bladguld.",
+      image: "/images/lobster-pad-thai.png",
+      label: "Kockens val",
+      highlight: "Royal Pad Thai"
+    },
+    {
+      name: "Plum Wine Glazed Duck",
+      price: "625 KR",
+      description: "Confiterad anka, plommonvinsreduktion, stjärnanis-infuserad pak choi och jasminris från kungliga fälten i Isan.",
+      image: "/images/plum-wine-duck.png",
+      label: "Publikfavorit",
+      highlight: "Emerald Duck"
+    }
+  ];
+
+  const [selectedDish, setSelectedDish] = React.useState(signatureDishes[0]);
+
   return (
     <div className="min-h-screen bg-black overflow-x-hidden">
       <Navbar />
@@ -51,12 +80,14 @@ export default function LandingPage() {
               >
                 RESERVERA BORD
               </Button>
-              <Button
-                variant="outline"
-                className="px-12 py-5 text-[11px] tracking-[0.4em] font-bold border-2 border-white text-white bg-black/40 backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-500 h-auto shadow-2xl"
-              >
-                SE MENYN
-              </Button>
+              <Link href="/meny">
+                <Button
+                  variant="outline"
+                  className="px-12 py-5 text-[11px] tracking-[0.4em] font-bold border-2 border-white text-white bg-black/40 backdrop-blur-sm hover:bg-white hover:text-black transition-all duration-500 h-auto shadow-2xl"
+                >
+                  SE MENYN
+                </Button>
+              </Link>
             </div>
           </motion.div>
         </div>
@@ -94,12 +125,14 @@ export default function LandingPage() {
             className="relative h-[600px] w-full"
           >
             <div className="absolute inset-0 border border-gold/20 -m-4 rounded-sm" />
-            <Image
-              src="/images/chef.png"
-              alt="Vår kock"
-              fill
-              className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-            />
+            <div className="absolute inset-0 overflow-hidden rounded-sm">
+              <Image
+                src="/images/chef.png"
+                alt="Vår kock"
+                fill
+                className="object-cover scale-125"
+              />
+            </div>
           </motion.div>
 
           <motion.div
@@ -122,7 +155,9 @@ export default function LandingPage() {
                 lokalt svenskt <span className="text-white font-semibold">Wagyu-kött</span> av högsta klass.
               </p>
             </div>
-            <Button variant="outline" className="mt-12">Läs om vår historia</Button>
+            <Link href="/story">
+              <Button variant="outline" className="mt-12">Läs om vår historia</Button>
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -139,58 +174,53 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div className="order-2 md:order-1">
               <div className="space-y-12">
-                <div className="group cursor-pointer">
-                  <div className="flex justify-between items-end mb-2">
-                    <h4 className="text-2xl font-serif text-white group-hover:text-gold transition-colors">Wagyu Massaman</h4>
-                    <span className="text-gold-light font-sans tracking-widest uppercase text-sm font-bold">745 KR</span>
+                {signatureDishes.map((dish, index) => (
+                  <div
+                    key={index}
+                    className={`group cursor-pointer p-4 -mx-4 rounded-lg transition-colors duration-300 ${selectedDish.name === dish.name ? 'bg-white/5' : 'hover:bg-white/5'}`}
+                    onClick={() => setSelectedDish(dish)}
+                  >
+                    {dish.label && (
+                      <p className="text-[10px] uppercase tracking-[0.3em] text-gold mb-1 font-bold">
+                        {dish.label}
+                      </p>
+                    )}
+                    <div className="flex justify-between items-end mb-2 border-b border-white/5 pb-2 group-hover:border-gold/30 transition-colors">
+                      <h4 className={`text-2xl font-serif soap-transition-colors ${selectedDish.name === dish.name ? 'text-gold' : 'text-white group-hover:text-gold'}`}>
+                        {dish.name}
+                      </h4>
+                      <span className="text-gold-light font-sans tracking-widest uppercase text-sm font-bold">{dish.price}</span>
+                    </div>
+                    <p className="text-zinc-400 font-sans text-sm leading-relaxed max-w-md">
+                      {dish.description}
+                    </p>
                   </div>
-                  <p className="text-zinc-400 font-sans text-sm leading-relaxed max-w-md">
-                    Långkokt svenskt Wagyu högrev, handmortlad curry, kanderad sötpotatis,
-                    rostade pekannötter och boonk-chai röd lök.
-                  </p>
-                </div>
-
-                <div className="group cursor-pointer">
-                  <div className="flex justify-between items-end mb-2 border-b border-white/5 pb-2">
-                    <h4 className="text-2xl font-serif text-white group-hover:text-gold transition-colors">Lobster Pad Thai</h4>
-                    <span className="text-gold-light font-sans tracking-widest uppercase text-sm font-bold">595 KR</span>
-                  </div>
-                  <p className="text-zinc-400 font-sans text-sm leading-relaxed max-w-md">
-                    Färsk hummer från västkusten, tamarind-reduktion på 48 h, risnudlar
-                    från Chanthaburi, toppad med 24k bladguld.
-                  </p>
-                </div>
-
-                <div className="group cursor-pointer border-b border-white/5 pb-2">
-                  <div className="flex justify-between items-end mb-2">
-                    <h4 className="text-2xl font-serif text-white group-hover:text-gold transition-colors">Plum Wine Glazed Duck</h4>
-                    <span className="text-gold-light font-sans tracking-widest uppercase text-sm font-bold">625 KR</span>
-                  </div>
-                  <p className="text-zinc-400 font-sans text-sm leading-relaxed max-w-md">
-                    Confiterad anka, plommonvinsreduktion, stjärnanis-infuserad pak choi
-                    och jasminris från kungliga fälten i Isan.
-                  </p>
-                </div>
+                ))}
               </div>
-              <Button variant="gold" className="mt-16 w-full md:w-auto">Se Hela Avsmakningsmenyn</Button>
+              <Link href="/meny" className="w-full md:w-auto mt-16 inline-block">
+                <Button variant="gold" className="w-full">Se Hela Avsmakningsmenyn</Button>
+              </Link>
             </div>
 
             <motion.div
+              key={selectedDish.name}
               initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="order-1 md:order-2 relative h-[500px] md:h-[700px] w-full overflow-hidden"
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className="order-1 md:order-2 relative h-[500px] md:h-[700px] w-full overflow-hidden rounded-sm"
             >
               <Image
-                src="/images/dish-1.png"
-                alt="Wagyu Massaman"
+                src={selectedDish.image}
+                alt={selectedDish.name}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-1000"
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
               <div className="absolute bottom-8 left-8">
-                <p className="text-gold-light uppercase tracking-[0.4em] text-[10px] mb-2 font-bold">Månadens rekommendation</p>
-                <h4 className="text-3xl font-serif text-white uppercase italic">The Golden Wagyu</h4>
+                <p className="text-gold-light uppercase tracking-[0.4em] text-[10px] mb-2 font-bold">{selectedDish.label}</p>
+                <h4 className="text-3xl font-serif text-white uppercase italic">{selectedDish.highlight}</h4>
               </div>
             </motion.div>
           </div>
