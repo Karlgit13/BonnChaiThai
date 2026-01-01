@@ -182,7 +182,7 @@ export default function LandingPage() {
               className="order-1 md:order-2 relative h-[500px] md:h-[700px] w-full overflow-hidden"
             >
               <Image
-                src="/images/luxury-dish.png"
+                src="/images/dish-1.png"
                 alt="Wagyu Massaman"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-1000"

@@ -4,11 +4,11 @@ Fullstack-applikation för en exklusiv Thai-restaurang i Stockholm. Byggd med Ne
 
 ## 🛠 Tech Stack
 
-- **Frontend/Backend**: Next.js 16 (App Router)
-- **Databas**: Azure PostgreSQL + Drizzle ORM
-- **Styling**: Tailwind CSS + Framer Motion
-- **AI**: Google Gemini via Vercel AI SDK
-- **Forms**: React Hook Form + Zod
+- ### Frontend/Backend: Next.js 16 (App Router)
+- ### Databas: Azure PostgreSQL + Drizzle ORM
+- ### Styling: Tailwind CSS + Framer Motion
+- ### AI: Google Gemini via Vercel AI SDK
+- ### Forms: React Hook Form + Zod
 
 ## 📁 Struktur
 
@@ -20,24 +20,24 @@ Fullstack-applikation för en exklusiv Thai-restaurang i Stockholm. Byggd med Ne
 
 ## 🚀 Komma igång
 
-1. **Installera beroenden**:
+1. ### Installera beroenden:
    ```bash
    pnpm install
    ```
 
-2. **Miljövariabler**:
+2. ### Miljövariabler:
    Skapa en `.env` fil (se `.env.example`).
 
-3. **Databas-setup**:
+3. ### Databas-setup:
    ```bash
    pnpm db:push
    ```
 
-4. **Kör lokalt**:
+4. ### Kör lokalt:
    ```bash
    pnpm dev
    ```
 
-## 📜 Roadmap
+### 📜 Roadmap & Implementation Planning
 
-Se `implementation-planning/implementation-planning.md` för detaljerad status.
+Se `Roadmap/Roadmap.md` för detaljerad status.
