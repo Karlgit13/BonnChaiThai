@@ -1,25 +1,43 @@
-# Thai Restaurant Fullstack Application
+# BonnChaiThai - Premium Thai Restaurant 🍜
 
-En premium Thai-restaurang webbapplikation byggd med Next.js, Express, och Azure.
+Fullstack-applikation för en exklusiv Thai-restaurang i Stockholm. Byggd med Next.js, Azure och AI.
 
-## Struktur
+## 🛠 Tech Stack
 
-```
-examensarbete-1/
-├── frontend/                 # Next.js frontend
-├── backend/                  # Express API
-├── shared/                   # Shared packages (database, types, ui)
-│   ├── database/
-│   ├── types/
-│   └── ui/
-├── implementation-planning/  # Projekt dokumentation
-├── pnpm-workspace.yaml
-└── package.json
-```
+- **Frontend/Backend**: Next.js 16 (App Router)
+- **Databas**: Azure PostgreSQL + Drizzle ORM
+- **Styling**: Tailwind CSS + Framer Motion
+- **AI**: Google Gemini via Vercel AI SDK
+- **Forms**: React Hook Form + Zod
 
-## Komma igång
+## 📁 Struktur
 
-```bash
-pnpm install
-pnpm dev
-```
+- `app/`: Sidor och API routes.
+- `components/`: UI-komponenter och sektioner.
+- `lib/`: Databas-schema, AI-logik och verktyg.
+- `implementation-planning/`: Roadmap och dokumentation.
+- `public/`: Bilder och statiska filer.
+
+## 🚀 Komma igång
+
+1. **Installera beroenden**:
+   ```bash
+   pnpm install
+   ```
+
+2. **Miljövariabler**:
+   Skapa en `.env` fil (se `.env.example`).
+
+3. **Databas-setup**:
+   ```bash
+   pnpm db:push
+   ```
+
+4. **Kör lokalt**:
+   ```bash
+   pnpm dev
+   ```
+
+## 📜 Roadmap
+
+Se `implementation-planning/implementation-planning.md` för detaljerad status.

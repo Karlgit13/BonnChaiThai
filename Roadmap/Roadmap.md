@@ -1,6 +1,6 @@
-# Thai-Restaurang Projekt: Roadmap 🚀
+# Thai-Restaurang Projekt: Roadmap
 
-## 1. Grunden (Fixat! ✅)
+## 1. Grunden
 - Rensa bort monorepo/Express-krånglet.
 - Sätt upp en ren Next.js App Router-struktur.
 - Organisera mappar logiskt (app, components, lib).
@@ -9,11 +9,12 @@
 ## 2. Database & Azure-fix
 - Rigga Azure PostgreSQL Flexible Server.
 - Definiera schemat i `lib/db/schema.ts`:
-  - Meny-grejer (maträtter, kategorier, priser)
-  - Bokningssystemet (datum, tider, antal gäster)
-  - Personal-bios & Story
-  - Recensioner & Stars
-- Pusha schema & Seeda med legit Thai-mat.
+- Meny-grejer (maträtter, kategorier, priser)
+- Bokningssystemet (datum, tider, antal gäster)
+- Personal-bios & Story
+- Recensioner & Stars
+- Fixa seed-data (redo att köras när DB är kopplad).
+
 
 ## 3. Backend & Logik (Next.js API)
 - Bygga API Routes i `app/api/...`
