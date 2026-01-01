@@ -20,7 +20,7 @@ export const Navbar = () => {
     const navLinks = [
         { name: "Meny", href: "/meny" },
         { name: "Vår Story", href: "/story" },
-        { name: "Recensioner", href: "/#reviews" },
+        { name: "Recensioner", href: "/recensioner" },
         { name: "Personal", href: "/#staff" },
     ];
 
