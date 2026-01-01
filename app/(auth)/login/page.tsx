@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ export default function LoginPage() {
             const data = await res.json();
 
             if (res.ok) {
-                router.push("/admin"); // Or wherever appropriate
+                router.push("/admin");
                 router.refresh();
             } else {
                 setError(data.error || "Inloggning misslyckades");
@@ -40,57 +41,77 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-black p-4 relative overflow-hidden">
+            {/* Ambient Background Light */}
+            <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px]" />
+            <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-red-900/5 rounded-full blur-[120px]" />
+
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md bg-zinc-900 border border-zinc-800 p-8 rounded-2xl shadow-2xl"
+                transition={{ duration: 0.8 }}
+                className="w-full max-w-lg relative z-10"
             >
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white mb-2">Välkommen tillbaka</h1>
-                    <p className="text-zinc-400">Logga in på Bonn Chai Thai Admin</p>
+                <div className="bg-zinc-950 border border-white/5 p-12 shadow-2xl">
+                    <div className="text-center mb-12">
+                        <Link href="/" className="inline-block mb-8">
+                            <span className="text-3xl font-serif font-bold tracking-[0.3em] text-white">BONN CHAI</span>
+                            <p className="text-[10px] uppercase tracking-[0.5em] text-gold mt-2">Personal & Administration</p>
+                        </Link>
+                        <h1 className="text-xl font-serif text-white uppercase tracking-widest italic">Välkommen tillbaka</h1>
+                    </div>
+
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        <div>
+                            <label className="block text-[10px] uppercase tracking-[0.3em] text-zinc-500 mb-3">E-postadress</label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full bg-transparent border-b border-zinc-800 text-white py-4 focus:outline-none focus:border-gold transition-colors font-sans"
+                                placeholder="namn@bonnchaitthai.se"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-[10px] uppercase tracking-[0.3em] text-zinc-500 mb-3">Lösenord</label>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full bg-transparent border-b border-zinc-800 text-white py-4 focus:outline-none focus:border-gold transition-colors"
+                                placeholder="••••••••"
+                                required
+                            />
+                        </div>
+
+                        {error && (
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-red-500 text-[10px] uppercase tracking-wider text-center"
+                            >
+                                {error}
+                            </motion.p>
+                        )}
+
+                        <Button
+                            className="w-full py-5"
+                            variant="gold"
+                            disabled={loading}
+                        >
+                            {loading ? "Verifierar..." : "Logga in"}
+                        </Button>
+                    </form>
+
+                    <div className="mt-12 text-center">
+                        <p className="text-zinc-600 text-[10px] uppercase tracking-[0.2em]">
+                            Endast auktoriserad personal. <br />
+                            Vänligen kontakta ledningen för åtkomst.
+                        </p>
+                    </div>
                 </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-zinc-400 mb-2">E-post</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all font-sans"
-                            placeholder="namn@exempel.se"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-zinc-400 mb-2">Lösenord</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all"
-                            placeholder="••••••••"
-                            required
-                        />
-                    </div>
-
-                    {error && (
-                        <p className="text-red-400 text-sm text-center font-sans">{error}</p>
-                    )}
-
-                    <Button
-                        className="w-full bg-amber-600 hover:bg-amber-500 text-white py-3 rounded-lg font-bold text-lg"
-                        variant="default"
-                    >
-                        {loading ? "Loggar in..." : "Logga in"}
-                    </Button>
-                </form>
-
-                <p className="mt-8 text-center text-zinc-500 text-sm">
-                    Har du inget konto? Kontakta chefen för assistans.
-                </p>
             </motion.div>
         </div>
     );

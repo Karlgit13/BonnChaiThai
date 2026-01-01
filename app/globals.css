@@ -1,26 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Shifted from #050505 to a warmer, slightly lighter "Midnight Zinc" */
+  --background: #0f0f12;
+  --foreground: #e4e4e7;
+
+  /* Luxury Palette - Refined for better visibility */
+  --thai-gold: #c5a059;
+  --thai-gold-light: #e6cea0;
+  --thai-gold-dark: #8c6d31;
+  --thai-red: #991b1b;
+  --thai-silk: #18181b;
+
+  --zinc-950: #0c0c0e;
+  --zinc-900: #18181b;
+  --zinc-800: #27272a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-gold: var(--thai-gold);
+  --color-gold-light: var(--thai-gold-light);
+  --color-gold-dark: var(--thai-gold-dark);
+  --color-silk: var(--thai-silk);
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply selection:bg-gold/30 selection:text-white antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif tracking-tight text-white;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  .glass-dark {
+    @apply bg-zinc-950/60 backdrop-blur-xl border border-white/5;
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-tr from-gold-dark via-gold to-gold-light;
+  }
+
+  .bg-gradient-gold {
+    @apply bg-gradient-to-tr from-gold-dark via-gold to-gold-light;
+  }
+
+  /* Subtle lighting for "too dark" sections */
+  .ambient-glow {
+    @apply absolute pointer-events-none;
+    background: radial-gradient(circle at center, var(--thai-gold-dark) 0%, transparent 70%);
+    opacity: 0.1;
+    filter: blur(80px);
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--background);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--zinc-800);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--thai-gold-dark);
+  }
 }

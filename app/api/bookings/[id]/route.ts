@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     const session = await getSession();
     if (!session || (session.user.role !== 'staff' && session.user.role !== 'admin')) {
@@ -15,7 +15,8 @@ export async function PATCH(
 
     try {
         const { status } = await req.json();
-        const bookingId = parseInt(params.id);
+        const { id } = await params;
+        const bookingId = parseInt(id);
 
         const [updated] = await db.update(bookings)
             .set({ status })

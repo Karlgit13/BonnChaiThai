@@ -29,8 +29,11 @@
 - Sätta upp Azure web app för hosting.
 - Fixa GitHub Actions för automatisk deploy.
 
+## 6. CI/CD
+- Fixa GitHub Actions för automatisk deploy.
 
-## 6. Database & Azure-fix
+
+## 7. Database & Azure-fix
 - Definiera schemat i `lib/db/schema.ts`:
 - Meny-grejer (maträtter, kategorier, priser)
 - Bokningssystemet (datum, tider, antal gäster)
@@ -38,10 +41,11 @@
 - Recensioner & Stars
 
 
-## 7. Infra & tester
-- Fixa tester.
+## 8. Tester
+- Vitest & React Testing Library.
 
-## 8. Swagger UI
+
+## 9. Swagger UI
 - Fixa swagger UI.
 - Fixa API dokumentation.
 - Presentation
