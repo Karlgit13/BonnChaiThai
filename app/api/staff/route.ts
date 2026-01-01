@@ -2,18 +2,29 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db/client';
 import { staff } from '@/lib/db/schema';
 import { asc } from 'drizzle-orm';
+import { verifyToken, getAuthToken } from '@/lib/auth';
 
 /**
  * @swagger
  * /api/staff:
  *   get:
- *     summary: Get all staff members
- *     description: Returns a list of all staff members suited for the "Personal" page.
+ *     summary: Hämta all personal
+ *     description: Returnerar en lista på all personal. Kräver inloggning.
+ *     tags: [Staff]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Successfully retrieved staff members
+ *         description: Personal hämtad
+ *       401:
+ *         description: Obehörig
  */
-export async function GET() {
+export async function GET(request: Request) {
+    const token = getAuthToken(request as any);
+    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+    const user = await verifyToken(token);
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     try {
         const staffMembers = await db.select().from(staff).orderBy(asc(staff.order));
         return NextResponse.json(staffMembers);

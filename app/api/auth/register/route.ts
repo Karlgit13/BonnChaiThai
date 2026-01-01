@@ -5,6 +5,32 @@ import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import { signToken } from '@/lib/auth';
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Registrera en ny användare
+ *     description: Skapa ett nytt personal- eller kundkonto.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Registrering lyckades
+ *       400:
+ *         description: Felaktig indata eller användaren finns redan
+ */
 export async function POST(request: Request) {
     try {
         const { name, email, password } = await request.json();

@@ -1,6 +1,41 @@
 import { db } from "@/lib/db";
 import { reviews } from "@/lib/db/schema";
 import { NextResponse } from "next/server";
+import { verifyToken, getAuthToken } from "@/lib/auth";
+
+/**
+ * @swagger
+ * /api/reviews:
+ *   get:
+ *     summary: Hämta alla recensioner
+ *     tags: [Reviews]
+ *     responses:
+ *       200:
+ *         description: Lista på recensioner
+ *   post:
+ *     summary: Lämna en recension
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               customerName:
+ *                 type: string
+ *               rating:
+ *                 type: integer
+ *               comment:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Recension postad
+ *       401:
+ *         description: Obehörig
+ */
 
 export async function GET() {
     try {
@@ -16,6 +51,12 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+    const token = getAuthToken(req as any);
+    if (!token) return NextResponse.json({ error: "Obehörig. Logga in för att lämna recension." }, { status: 401 });
+
+    const user = await verifyToken(token);
+    if (!user) return NextResponse.json({ error: "Obehörig" }, { status: 401 });
+
     try {
         const { customerName, rating, comment } = await req.json();
 

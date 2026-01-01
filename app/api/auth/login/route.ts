@@ -5,6 +5,41 @@ import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import { signToken } from '@/lib/auth';
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Autentisera en användare
+ *     description: Logga in med e-post/lösenord eller Mobilt BankID. Returnerar en JWT-token.
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               isBankID:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Inloggning lyckades
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Felaktiga inloggningsuppgifter
+ */
 export async function POST(request: Request) {
     try {
         const { email, password, isBankID } = await request.json();
@@ -33,7 +68,8 @@ export async function POST(request: Request) {
         const token = await signToken({ id: user.id, email: user.email, name: user.name, role: user.role });
 
         const response = NextResponse.json({
-            user: { name: user.name, email: user.email, role: user.role }
+            user: { name: user.name, email: user.email, role: user.role },
+            token: token
         });
 
         response.cookies.set('token', token, {

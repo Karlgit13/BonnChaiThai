@@ -4,6 +4,7 @@ import { bookings } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import { addWeeks, isAfter, isBefore, startOfDay, parseISO } from 'date-fns';
+import { verifyToken, getAuthToken } from '@/lib/auth';
 
 const MAX_WEEKS_AHEAD = 8;
 const SEATS_PER_SLOT = 20; // Simplified capacity per slot
@@ -19,7 +20,10 @@ const FULLY_BOOKED_UNTIL = '2026-02-01';
  * @swagger
  * /api/bookings:
  *   get:
- *     summary: Get available time slots
+ *     summary: Kontrollera tillgängliga tider
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: date
@@ -27,12 +31,17 @@ const FULLY_BOOKED_UNTIL = '2026-02-01';
  *           type: string
  *           format: date
  *         required: true
- *         description: Date to check availability for (YYYY-MM-DD)
+ *         description: Datum att kontrollera (YYYY-MM-DD)
  *     responses:
  *       200:
- *         description: List of available time slots
+ *         description: Lista på tider och tillgänglighet
+ *       401:
+ *         description: Obehörig
  *   post:
- *     summary: Create a new booking
+ *     summary: Skapa en ny bordsbokning
+ *     tags: [Bookings]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -64,12 +73,20 @@ const FULLY_BOOKED_UNTIL = '2026-02-01';
  *                 type: string
  *     responses:
  *       201:
- *         description: Booking created successfully
+ *         description: Bokning bekräftad
  *       400:
- *         description: Invalid input or fully booked
+ *         description: Felaktig indata eller fullbokat
+ *       401:
+ *         description: Obehörig
  */
 
 export async function GET(request: Request) {
+    const token = getAuthToken(request as any);
+    if (!token) return NextResponse.json({ error: 'Unauthorized. Logga in för att se tillgänglighet.' }, { status: 401 });
+
+    const user = await verifyToken(token);
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
     const { searchParams } = new URL(request.url);
     const dateParam = searchParams.get('date');
 
@@ -131,6 +148,12 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+    const token = getAuthToken(request as any);
+    if (!token) return NextResponse.json({ error: 'Unauthorized. Logga in för att boka bord.' }, { status: 401 });
+
+    const user = await verifyToken(token);
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
     try {
         const body = await request.json();
         const { date, timeSlot, partySize, customerName, customerEmail, customerPhone, notes } = body;
