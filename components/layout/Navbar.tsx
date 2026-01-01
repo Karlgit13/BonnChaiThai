@@ -18,8 +18,8 @@ export const Navbar = () => {
     }, []);
 
     const navLinks = [
-        { name: "Meny", href: "/#menu" },
-        { name: "Vår Story", href: "/#story" },
+        { name: "Meny", href: "/meny" },
+        { name: "Vår Story", href: "/story" },
         { name: "Recensioner", href: "/#reviews" },
         { name: "Personal", href: "/#staff" },
     ];
