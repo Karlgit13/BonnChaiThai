@@ -10,28 +10,40 @@
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",
         "db:push": "drizzle-kit push",
-        "db:studio": "drizzle-kit studio"
+        "db:studio": "drizzle-kit studio",
+        "db:seed": "tsx lib/db/seed.ts"
     },
     "dependencies": {
+        "@ai-sdk/google": "^3.0.2",
+        "@hookform/resolvers": "^5.2.2",
+        "ai": "^6.0.5",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "date-fns": "^4.1.0",
+        "dotenv": "^17.2.3",
+        "drizzle-orm": "^0.33.0",
+        "framer-motion": "^12.23.26",
+        "lucide-react": "^0.400.0",
+        "nanoid": "^5.1.6",
         "next": "16.1.1",
+        "postgres": "^3.4.4",
         "react": "19.2.3",
         "react-dom": "19.2.3",
-        "drizzle-orm": "^0.33.0",
-        "postgres": "^3.4.4",
-        "zod": "^3.23.0",
-        "lucide-react": "^0.400.0",
-        "clsx": "^2.1.1",
-        "tailwind-merge": "^2.3.0"
+        "react-hook-form": "^7.69.0",
+        "tailwind-merge": "^2.3.0",
+        "zod": "^3.23.0"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
+        "@types/pg": "^8.16.0",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "drizzle-kit": "^0.24.0",
         "eslint": "^9",
         "eslint-config-next": "16.1.1",
         "tailwindcss": "^4",
-        "typescript": "^5",
-        "drizzle-kit": "^0.24.0"
+        "tsx": "^4.21.0",
+        "typescript": "^5"
     }
 }
