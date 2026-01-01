@@ -206,6 +206,7 @@ export default function ReviewsPage() {
                         alt="Restaurang Personal"
                         fill
                         className="object-cover opacity-40 blur-sm"
+                        sizes="100vw"
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-black" />

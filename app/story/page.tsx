@@ -18,6 +18,7 @@ export default function StoryPage() {
                         alt="Bonn Chai History"
                         fill
                         className="object-cover opacity-40 blur-sm"
+                        sizes="100vw"
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-black" />
@@ -71,10 +72,11 @@ export default function StoryPage() {
                         <div className="absolute inset-0 border border-gold/20 -m-4 rounded-sm z-0" />
                         <div className="absolute inset-0 overflow-hidden rounded-sm z-10">
                             <Image
-                                src="/images/kockar och servitörer.png"
-                                alt="Mormor Boon-Nam's Arv"
+                                src="/images/somchai_portrait.png"
+                                alt="Chef Somchai"
                                 fill
-                                className="object-cover scale-125"
+                                className="object-cover"
+                                sizes="(max-width: 1024px) 100vw, 50vw"
                             />
                         </div>
                     </motion.div>
@@ -116,6 +118,7 @@ export default function StoryPage() {
                             alt="The Golden Wagyu - En fusion"
                             fill
                             className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            sizes="(max-width: 1024px) 100vw, 50vw"
                         />
                         <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
                     </motion.div>

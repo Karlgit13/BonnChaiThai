@@ -49,6 +49,7 @@ export default function LandingPage() {
             alt="Bonn Chai Thai Dining"
             fill
             className="object-cover opacity-90"
+            sizes="100vw"
             priority
           />
           {/* Heavily Enhanced gradient for better text legibility on busy background */}
@@ -131,6 +132,7 @@ export default function LandingPage() {
                 alt="Vår kock"
                 fill
                 className="object-cover scale-125"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </motion.div>
