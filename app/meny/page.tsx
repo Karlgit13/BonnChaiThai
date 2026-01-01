@@ -118,7 +118,7 @@ export default function MenuPage() {
             </AnimatePresence>
 
             {/* Header */}
-            <div className="relative h-[40vh] flex items-center justify-center overflow-hidden">
+            <div className="relative h-[45vh] flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
                     <Image
                         src="/images/dish-1.png"
@@ -142,7 +142,7 @@ export default function MenuPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-5xl md:text-8xl font-serif text-white mb-6"
+                        className="text-5xl md:text-7xl font-serif text-white mb-6"
                     >
                         Vår Meny
                     </motion.h1>
