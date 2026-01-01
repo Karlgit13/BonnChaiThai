@@ -75,12 +75,14 @@ export default function LandingPage() {
               En kulinarisk resa som väntat på dig.
             </p>
             <div className="flex flex-col md:flex-row gap-8 justify-center">
-              <Button
-                variant="gold"
-                className="px-12 py-5 text-[11px] tracking-[0.4em] font-bold shadow-2xl shadow-gold/30 hover:shadow-gold/50 hover:scale-105 transition-all duration-500 h-auto"
-              >
-                RESERVERA BORD
-              </Button>
+              <Link href="/boka-bord">
+                <Button
+                  variant="gold"
+                  className="px-12 py-5 text-[11px] tracking-[0.4em] font-bold shadow-2xl shadow-gold/30 hover:shadow-gold/50 hover:scale-105 transition-all duration-500 h-auto"
+                >
+                  RESERVERA BORD
+                </Button>
+              </Link>
               <Link href="/meny">
                 <Button
                   variant="outline"
