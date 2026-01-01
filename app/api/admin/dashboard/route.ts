@@ -4,19 +4,7 @@ import { bookings } from '@/lib/db/schema';
 import { verifyToken, getAuthToken } from '@/lib/auth';
 import { desc, sql } from 'drizzle-orm';
 
-/**
- * @swagger
- * /api/admin/dashboard:
- *   get:
- *     summary: Hämta dashboard-statistik (Admin endast)
- *     description: Hämtar en sammanfattning av bokningar och försäljningsdata. Kräver Admin-token.
- *     tags: [Admin]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Dashboard data hämtad
- */
+
 export async function GET(request: NextRequest) {
     // 1. Verify Admin
     const token = getAuthToken(request);
