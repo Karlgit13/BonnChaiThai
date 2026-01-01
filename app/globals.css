@@ -1,32 +1,25 @@
 @import "tailwindcss";
 
-:root {
-  /* Shifted from #050505 to a warmer, slightly lighter "Midnight Zinc" */
-  --background: #0f0f12;
-  --foreground: #e4e4e7;
+@theme {
+  --color-background: #0f0f12;
+  --color-foreground: #e4e4e7;
 
-  /* Luxury Palette - Refined for better visibility */
-  --thai-gold: #c5a059;
-  --thai-gold-light: #e6cea0;
-  --thai-gold-dark: #8c6d31;
-  --thai-red: #991b1b;
-  --thai-silk: #18181b;
+  --color-gold: #c5a059;
+  --color-gold-light: #e6cea0;
+  --color-gold-dark: #8c6d31;
+  --color-silk: #18181b;
 
-  --zinc-950: #0c0c0e;
-  --zinc-900: #18181b;
-  --zinc-800: #27272a;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-gold: var(--thai-gold);
-  --color-gold-light: var(--thai-gold-light);
-  --color-gold-dark: var(--thai-gold-dark);
-  --color-silk: var(--thai-silk);
+  --color-zinc-950: #0c0c0e;
+  --color-zinc-900: #18181b;
+  --color-zinc-800: #27272a;
 
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
+}
+
+:root {
+  --background: #0f0f12;
+  --foreground: #e4e4e7;
 }
 
 @layer base {
@@ -66,7 +59,7 @@
   /* Subtle lighting for "too dark" sections */
   .ambient-glow {
     @apply absolute pointer-events-none;
-    background: radial-gradient(circle at center, var(--thai-gold-dark) 0%, transparent 70%);
+    background: radial-gradient(circle at center, var(--color-gold-dark) 0%, transparent 70%);
     opacity: 0.1;
     filter: blur(80px);
   }
@@ -81,11 +74,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--zinc-800);
+    background: var(--color-zinc-800);
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--thai-gold-dark);
+    background: var(--color-gold-dark);
   }
 }
