@@ -14,20 +14,17 @@ import { NextResponse } from "next/server";
  *         description: Menyn hämtad
  */
 
+import { asc, eq } from 'drizzle-orm';
+
 export async function GET() {
     try {
-        const allCategories = await db.query.categories.findMany({
-            with: {
-                // items: true // This requires relations to be defined in schema.ts
-            },
-            orderBy: (categories, { asc }) => [asc(categories.order)],
-        });
+        const allCategories = await db.select()
+            .from(categories)
+            .orderBy(asc(categories.order));
 
-        // Since relations aren't explicitly defined with relations() in schema yet, 
-        // we fetch items separately and group them
-        const items = await db.query.menuItems.findMany({
-            where: (items, { eq }) => eq(items.isAvailable, true),
-        });
+        const items = await db.select()
+            .from(menuItems)
+            .where(eq(menuItems.isAvailable, true));
 
         const menu = allCategories.map(cat => ({
             ...cat,
