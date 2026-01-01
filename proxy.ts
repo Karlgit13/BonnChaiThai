@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "@/lib/auth";
+import { verifyToken } from "@/lib/auth";
 
 // Add paths that require authentication here
 const protectedPaths = ["/admin", "/dashboard", "/staff"];
@@ -12,15 +12,20 @@ export async function proxy(request: NextRequest) {
     const isProtected = protectedPaths.some(path => pathname.startsWith(path));
     if (!isProtected) return NextResponse.next();
 
-    const session = request.cookies.get("session")?.value;
+    const token = request.cookies.get("token")?.value;
 
-    if (!session) {
+    if (!token) {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
     try {
-        const parsed = await decrypt(session);
-        const userRole = parsed.user.role;
+        const payload = await verifyToken(token);
+
+        if (!payload) {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+
+        const userRole = (payload as any).role;
 
         // Admin only check
         if (adminOnlyPaths.some(path => pathname.startsWith(path)) && userRole !== "admin") {

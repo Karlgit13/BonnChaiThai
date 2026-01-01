@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "Experience the true essence of Thai culinary artistry. A family-run fine dining establishment where heritage meets luxury.",
 };
 
+import { AuthProvider } from "@/context/AuthContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable} font-sans antialiased bg-black text-zinc-200`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -1,74 +1,41 @@
-import { SignJWT, jwtVerify, type JWTPayload } from "jose";
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { SignJWT, jwtVerify } from 'jose';
+import { cookies } from 'next/headers';
 
-interface UserSession {
-    id: number;
-    email: string;
-    role: string;
-    name: string;
-}
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-for-dev-only');
 
-interface SessionPayload extends JWTPayload {
-    user: UserSession;
-    expires: Date;
-}
-
-const secretKey = "secret";
-const key = new TextEncoder().encode(process.env.JWT_SECRET || secretKey);
-
-export async function encrypt(payload: SessionPayload) {
+export async function signToken(payload: any) {
     return await new SignJWT(payload)
-        .setProtectedHeader({ alg: "HS256" })
+        .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
-        .setExpirationTime("2h")
-        .sign(key);
+        .setExpirationTime('24h')
+        .sign(SECRET);
 }
 
-export async function decrypt(input: string): Promise<SessionPayload> {
-    const { payload } = await jwtVerify(input, key, {
-        algorithms: ["HS256"],
-    });
-    return payload as unknown as SessionPayload;
-}
-
-export async function login(user: { id: number; email: string; role: string; name: string }) {
-    // Create the session
-    const expires = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours
-    const session = await encrypt({ user, expires });
-
-    // Save the session in a cookie
-    (await cookies()).set("session", session, { expires, httpOnly: true, secure: process.env.NODE_ENV === "production" });
-}
-
-export async function logout() {
-    // Destroy the session
-    (await cookies()).set("session", "", { expires: new Date(0) });
-}
-
-export async function getSession() {
-    const session = (await cookies()).get("session")?.value;
-    if (!session) return null;
+export async function verifyToken(token: string) {
     try {
-        return await decrypt(session);
+        const { payload } = await jwtVerify(token, SECRET);
+        return payload;
     } catch (e) {
         return null;
     }
 }
 
-export async function updateSession(request: NextRequest) {
-    const session = request.cookies.get("session")?.value;
-    if (!session) return;
+export const decrypt = verifyToken;
+export const encrypt = signToken;
 
-    // Refresh the session so it doesn't expire
-    const parsed = await decrypt(session);
-    parsed.expires = new Date(Date.now() + 2 * 60 * 60 * 1000);
-    const res = NextResponse.next();
-    res.cookies.set({
-        name: "session",
-        value: await encrypt(parsed),
-        httpOnly: true,
-        expires: parsed.expires,
-    });
-    return res;
+export function getAuthToken(req: NextRequest) {
+    return req.cookies.get('token')?.value;
+}
+
+// Compat helper for existing route logic
+export async function getSession() {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('token')?.value;
+    if (!token) return null;
+    const payload = await verifyToken(token);
+    if (!payload) return null;
+    // Return wrapped in user to match existing attentes if needed, 
+    // or just the payload. Existing code expects .user.role
+    return { user: payload };
 }

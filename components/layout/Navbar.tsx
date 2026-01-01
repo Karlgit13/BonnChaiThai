@@ -4,10 +4,14 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "../ui/Button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { user, logout } = useAuth();
+    const pathname = usePathname();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -48,16 +52,45 @@ export const Navbar = () => {
                         <Link
                             key={link.name}
                             href={link.href}
-                            className="text-xs uppercase tracking-[0.2em] text-white/80 hover:text-gold transition-colors font-medium drop-shadow-md"
+                            className={`text-xs uppercase tracking-[0.2em] transition-colors font-medium drop-shadow-md ${pathname === link.href ? 'text-gold' : 'text-white/80 hover:text-gold'}`}
                         >
                             {link.name}
                         </Link>
                     ))}
-                    <Link href="/boka-bord">
-                        <Button variant="outline" className="text-[10px] py-2 px-4 border-gold/50 text-gold hover:bg-gold hover:text-black">
-                            Boka Bord
-                        </Button>
-                    </Link>
+
+                    <div className="flex items-center gap-6 pl-6 border-l border-white/10">
+                        {user ? (
+                            <div className="flex items-center gap-4">
+                                <div className="text-right">
+                                    <p className="text-[10px] text-gold uppercase tracking-widest font-bold">{user.name}</p>
+                                    <p className="text-[8px] text-zinc-500 uppercase tracking-widest leading-none">Inloggad</p>
+                                </div>
+                                <div className="h-8 w-8 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold text-xs font-serif">
+                                    {user.name[0]}
+                                </div>
+                                <button
+                                    onClick={logout}
+                                    className="text-[10px] uppercase tracking-widest text-zinc-500 hover:text-white transition-colors"
+                                >
+                                    Logga ut
+                                </button>
+                                {user.role === 'admin' && (
+                                    <Link href="/admin">
+                                        <Button variant="outline" className="text-[8px] h-7 px-3 border-gold/30 text-gold">Dashboard</Button>
+                                    </Link>
+                                )}
+                            </div>
+                        ) : (
+                            <Link href="/login" className="text-xs uppercase tracking-[0.2em] text-white/80 hover:text-gold transition-colors font-medium">
+                                Logga In
+                            </Link>
+                        )}
+                        <Link href="/boka-bord">
+                            <Button variant="outline" className="text-[10px] py-2 px-4 border-gold/50 text-gold hover:bg-gold hover:text-black">
+                                Boka Bord
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 {/* Mobile Toggle */}
@@ -115,6 +148,23 @@ export const Navbar = () => {
                                     Boka Bord
                                 </Button>
                             </Link>
+                            {user ? (
+                                <div className="pt-6 border-t border-white/10 flex justify-between items-center">
+                                    <div>
+                                        <p className="text-white font-serif">{user.name}</p>
+                                        <button onClick={logout} className="text-zinc-500 text-xs uppercase tracking-widest mt-1">Logga ut</button>
+                                    </div>
+                                    {user.role === 'admin' && (
+                                        <Link href="/admin" onClick={() => setMobileMenuOpen(false)}>
+                                            <Button variant="outline" className="text-xs">Dashboard</Button>
+                                        </Link>
+                                    )}
+                                </div>
+                            ) : (
+                                <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                                    <Button variant="outline" className="w-full">Logga In</Button>
+                                </Link>
+                            )}
                         </div>
                     </motion.div>
                 )}

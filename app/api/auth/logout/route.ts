@@ -1,7 +1,7 @@
-import { logout } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function POST() {
-    await logout();
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ message: 'Utloggad' });
+    response.cookies.set('token', '', { maxAge: 0 });
+    return response;
 }

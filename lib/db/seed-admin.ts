@@ -1,38 +1,74 @@
 import { db } from './client';
-import { users } from './schema';
-import { hash } from 'bcryptjs';
-import * as dotenv from 'dotenv';
+import { users, bookings } from './schema';
+import bcrypt from 'bcryptjs';
+import { nanoid } from 'nanoid';
+import { subDays, format, addDays } from 'date-fns';
 
-dotenv.config();
-
-async function seedAdmin() {
-    console.log('🌱 Seedar Admin...');
-
-    const adminEmail = 'admin@bonnchaitthai.se';
-    const adminPassword = 'AdminPassword123!'; // Change this in production
+async function seed() {
+    console.log('🌱 Seeding Admin and Mock Data...');
 
     try {
-        const hashedPassword = await hash(adminPassword, 10);
-
+        // 1. Create Admin User
+        const hashedPassword = await bcrypt.hash('adminadmin', 10);
         await db.insert(users).values({
-            email: adminEmail,
+            email: 'admin@admin.se',
             password: hashedPassword,
-            name: 'Huvudadmin',
+            name: 'Restaurang Chef',
             role: 'admin',
-        }).onConflictDoUpdate({
-            target: users.email,
-            set: {
-                password: hashedPassword,
-                role: 'admin'
-            }
-        });
+        }).onConflictDoNothing();
 
-        console.log('✅ Admin seedad!');
-        console.log('E-post:', adminEmail);
-        console.log('Lösenord:', adminPassword);
+        console.log('✅ Admin user created (or already exists)');
+
+        // 2. Clear existing mock bookings if needed (optional)
+        // await db.delete(bookings);
+
+        // 3. Create Mock Bookings for Statistics
+        const mockBookings = [];
+        const today = new Date();
+
+        // Past bookings (for stats)
+        for (let i = 1; i <= 20; i++) {
+            const date = subDays(today, Math.floor(Math.random() * 30));
+            mockBookings.push({
+                date: format(date, 'yyyy-MM-dd'),
+                timeSlot: ["17:00", "18:00", "19:00", "20:00"][Math.floor(Math.random() * 4)],
+                partySize: Math.floor(Math.random() * 6) + 1,
+                customerName: `Kund ${i}`,
+                customerEmail: `kund${i}@example.com`,
+                customerPhone: `070-${Math.floor(1000000 + Math.random() * 9000000)}`,
+                status: 'completed',
+                cancellationCode: nanoid(10),
+                createdAt: date,
+            });
+        }
+
+        // Upcoming bookings
+        for (let i = 1; i <= 10; i++) {
+            const date = addDays(today, Math.floor(Math.random() * 14) + 32); // Bookings after blackout
+            mockBookings.push({
+                date: format(date, 'yyyy-MM-dd'),
+                timeSlot: ["18:00", "19:00", "20:00"][Math.floor(Math.random() * 3)],
+                partySize: Math.floor(Math.random() * 4) + 2,
+                customerName: `Framtida Gäst ${i}`,
+                customerEmail: `gast${i}@example.com`,
+                customerPhone: `076-${Math.floor(1000000 + Math.random() * 9000000)}`,
+                status: 'confirmed',
+                cancellationCode: nanoid(10),
+                createdAt: today,
+            });
+        }
+
+        for (const b of mockBookings) {
+            await db.insert(bookings).values(b);
+        }
+
+        console.log(`✅ Seeded ${mockBookings.length} mock bookings`);
+
     } catch (error) {
-        console.error('❌ Fel vid seeding:', error);
+        console.error('❌ Error seeding data:', error);
+    } finally {
+        process.exit(0);
     }
 }
 
-seedAdmin();
+seed();

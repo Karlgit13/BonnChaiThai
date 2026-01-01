@@ -1,12 +1,18 @@
-import { getSession } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
+import { verifyToken, getAuthToken } from '@/lib/auth';
 
-export async function GET() {
-    const session = await getSession();
+export async function GET(request: NextRequest) {
+    const token = getAuthToken(request);
 
-    if (!session) {
-        return NextResponse.json({ user: null }, { status: 200 });
+    if (!token) {
+        return NextResponse.json({ user: null });
     }
 
-    return NextResponse.json({ user: session.user });
+    const payload = await verifyToken(token);
+
+    if (!payload) {
+        return NextResponse.json({ user: null });
+    }
+
+    return NextResponse.json({ user: payload });
 }
