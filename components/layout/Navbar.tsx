@@ -53,9 +53,11 @@ export const Navbar = () => {
                             {link.name}
                         </Link>
                     ))}
-                    <Button variant="outline" className="text-[10px] py-2 px-4 border-gold/50 text-gold hover:bg-gold hover:text-black">
-                        Boka Bord
-                    </Button>
+                    <Link href="/boka-bord">
+                        <Button variant="outline" className="text-[10px] py-2 px-4 border-gold/50 text-gold hover:bg-gold hover:text-black">
+                            Boka Bord
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Mobile Toggle */}
@@ -108,9 +110,11 @@ export const Navbar = () => {
                                     {link.name}
                                 </Link>
                             ))}
-                            <Button variant="gold" className="w-full">
-                                Boka Bord
-                            </Button>
+                            <Link href="/boka-bord" onClick={() => setMobileMenuOpen(false)}>
+                                <Button variant="gold" className="w-full">
+                                    Boka Bord
+                                </Button>
+                            </Link>
                         </div>
                     </motion.div>
                 )}

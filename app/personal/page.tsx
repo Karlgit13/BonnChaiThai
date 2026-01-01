@@ -5,46 +5,31 @@ import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { motion } from "framer-motion";
 
-const STAFF = [
-    {
-        name: "Chef Somchai",
-        role: "Grundare & Legend",
-        bio: "Hjärtat i Bonn Chai. Med över 40 års erfarenhet och en outsinlig passion för thailändska smaker, är det Somchai som sätter standarden för allt vi gör. Varje morgon inspekterar han dagens råvaror personligt.",
-        image: "/images/somchai_portrait.png"
-    },
-    {
-        name: "Ladda",
-        role: "Sous Chef",
-        bio: "Ladda är expert på de fem grundsmakerna. Hennes förmåga att balansera sälta, sötma, syra, beska och hetta är legendarisk i köket. Hon ansvarar för att alla våra currys håller absolut högsta klass.",
-        image: "/images/Ladda.png"
-    },
-    {
-        name: "Malee",
-        role: "Chef de Cuisine",
-        bio: "Malee är bryggan mellan tradition och innovation. Hon har rest jorden runt för att plocka inspiration, men återvänder alltid till rötterna i familjens recept.",
-        image: "/images/Malee.png"
-    },
-    {
-        name: "Suchart",
-        role: "Master of the Wok",
-        bio: "Suchart är mannen som tämjer elden. Han hanterar woken med en sådan fart att det nästan ser ut som en dans. Ingen kan ge maten den där perfekta 'Wok Hei'-smaken som han.",
-        image: "/images/Suchart.png"
-    },
-    {
-        name: "Ploy",
-        role: "Floor Manager",
-        bio: "Ploy är den första du möter när du kliver in. Med sin varma thailändska gästfrihet och sitt skarpa öga för detaljer ser hon till att servicen flyter lika smidigt som matlagningen i köket.",
-        image: "/images/Ploy.png"
-    },
-    {
-        name: "Anong",
-        role: "Chef de Rang",
-        bio: "Anong representerar den unga generationen på Bonn Chai. Hon brinner för att lära ut historien bakom varje rätt till våra gäster och ser till att varje besök blir en lärande och smakrik resa.",
-        image: "/images/Anong.png"
-    }
-];
-
 export default function StaffPage() {
+    const [staff, setStaff] = React.useState<any[]>([]);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const fetchStaff = async () => {
+            try {
+                const res = await fetch('/api/staff');
+                if (res.ok) {
+                    const data = await res.json();
+                    setStaff(data);
+                }
+            } catch (error) {
+                console.error('Failed to fetch staff:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchStaff();
+    }, []);
+
+    if (loading) {
+        return <div className="min-h-screen bg-black flex items-center justify-center text-gold font-serif text-2xl">Laddar Vårt Team...</div>;
+    }
+
     return (
         <div className="min-h-screen bg-black text-zinc-300">
             <Navbar />
@@ -98,7 +83,7 @@ export default function StaffPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
-                    {STAFF.map((member, index) => (
+                    {staff.map((member, index) => (
                         <motion.div
                             key={member.name}
                             initial={{ opacity: 0, y: 20 }}
@@ -109,7 +94,7 @@ export default function StaffPage() {
                         >
                             <div className="relative h-[400px] w-full mb-8 overflow-hidden rounded-2xl border border-white/10 bg-zinc-800 shadow-2xl">
                                 <Image
-                                    src={member.image}
+                                    src={member.image || '/images/placeholder.png'}
                                     alt={member.name}
                                     fill
                                     className="object-cover transition-all duration-700 ease-out group-hover:scale-110"
