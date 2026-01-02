@@ -45,7 +45,8 @@ async function seed() {
 
     try {
         // Clear existing staff to avoid duplicates (optional, for development)
-        // await db.delete(staff); 
+        // Clear existing staff to avoid duplicates
+        await db.delete(staff);
 
         for (const [index, member] of STAFF_DATA.entries()) {
             await db.insert(staff).values({

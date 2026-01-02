@@ -20,11 +20,8 @@ import { verifyToken, getAuthToken } from '@/lib/auth';
  *         description: Obehörig
  */
 export async function GET(request: Request) {
-    const token = getAuthToken(request as any);
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-    const user = await verifyToken(token);
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Public endpoint for viewing staff
+    // Removed auth check to allow public website visitors to see the staff list
     try {
         const staffMembers = await db.select().from(staff).orderBy(asc(staff.order));
         return NextResponse.json(staffMembers);

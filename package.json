@@ -12,10 +12,12 @@
         "db:push": "drizzle-kit push",
         "db:studio": "drizzle-kit studio",
         "db:seed": "tsx lib/db/seed.ts",
-        "db:seed-admin": "tsx lib/db/seed-admin.ts"
+        "db:seed-admin": "tsx lib/db/seed-admin.ts",
+        "test": "vitest"
     },
     "dependencies": {
         "@ai-sdk/google": "^3.0.2",
+        "@ai-sdk/react": "^3.0.5",
         "@hookform/resolvers": "^5.2.2",
         "ai": "^6.0.5",
         "bcryptjs": "^3.0.3",
@@ -41,6 +43,9 @@
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/jest-dom": "^6.9.1",
+        "@testing-library/react": "^16.3.1",
         "@types/bcryptjs": "^3.0.0",
         "@types/node": "^20",
         "@types/pg": "^8.16.0",
@@ -48,11 +53,15 @@
         "@types/react-dom": "^19",
         "@types/swagger-jsdoc": "^6.0.4",
         "@types/swagger-ui-react": "^5.18.0",
+        "@vitejs/plugin-react": "^5.1.2",
         "drizzle-kit": "^0.24.0",
         "eslint": "^9",
         "eslint-config-next": "16.1.1",
+        "jsdom": "^27.4.0",
         "tailwindcss": "^4",
         "tsx": "^4.21.0",
-        "typescript": "^5"
+        "typescript": "^5",
+        "vite": "^7.3.0",
+        "vitest": "^4.0.16"
     }
 }

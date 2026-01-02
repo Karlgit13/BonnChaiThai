@@ -7,7 +7,6 @@ Fullstack-applikation för en exklusiv Thai-restaurang i Stockholm. Byggd med Ne
 - ### Frontend/Backend: Next.js 16 (App Router)
 - ### Databas: Azure PostgreSQL + Drizzle ORM
 - ### Styling: Tailwind CSS + Framer Motion
-- ### AI: Google Gemini via Vercel AI SDK
 - ### Forms: React Hook Form + Zod
 
 ## 📁 Struktur

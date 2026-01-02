@@ -81,11 +81,7 @@ const FULLY_BOOKED_UNTIL = '2026-02-01';
  */
 
 export async function GET(request: Request) {
-    const token = getAuthToken(request as any);
-    if (!token) return NextResponse.json({ error: 'Unauthorized. Logga in för att se tillgänglighet.' }, { status: 401 });
-
-    const user = await verifyToken(token);
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // NOTE: No authentication required to VIEW available slots
 
     const { searchParams } = new URL(request.url);
     const dateParam = searchParams.get('date');

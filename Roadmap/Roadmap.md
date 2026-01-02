@@ -41,6 +41,9 @@
 - Recensioner & Stars
 
 
+## ~~Sätt upp AI chatbot~~ (REMOVED)
+- Chatbot feature has been removed from the project.
+
 ## 8. Tester
 - Vitest & React Testing Library.
 
