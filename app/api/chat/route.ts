@@ -4,7 +4,7 @@ import { streamText } from 'ai';
 // Initialize the Google Generative AI client with the API key
 // TODO: Move this to environment variables later for security
 const google = createGoogleGenerativeAI({
-    apiKey: 'AIzaSyAmLLIdwA4qHkuAzE5yde--1Vzete8yCQo',
+    apiKey: process.env.GOOGLE_API_KEY || process.env.Google_Generative_AI_API_KEY || '',
 });
 
 // Allow streaming responses up to 30 seconds
