@@ -138,26 +138,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: FIX - Manual dependency copy (for pnpm standalone mismatch)
-        run: |
-          # 1. scaled-jsx
-          if [ -d "node_modules/styled-jsx" ]; then
-            echo "✅ Copying styled-jsx to standalone/node_modules..."
-            mkdir -p .next/standalone/node_modules/styled-jsx
-            cp -r node_modules/styled-jsx/* .next/standalone/node_modules/styled-jsx/
-          fi
-          
-          # 2. @swc/helpers
-          if [ -d "node_modules/@swc/helpers" ]; then
-             echo "✅ Copying @swc/helpers to standalone/node_modules..."
-             mkdir -p .next/standalone/node_modules/@swc/helpers
-             cp -r node_modules/@swc/helpers/* .next/standalone/node_modules/@swc/helpers/
-          else
-             echo "⚠️ @swc/helpers not found in node_modules, checking parent..."
-             # Fallback check
-             find node_modules -name "@swc" -type d || echo "Cannot find @swc folder"
-          fi
-
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
