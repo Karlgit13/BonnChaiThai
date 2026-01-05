@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db/client';
 import { staff } from '@/lib/db/schema';
 import { asc } from 'drizzle-orm';
-import { asc } from 'drizzle-orm';
+
 
 /**
  * @swagger
