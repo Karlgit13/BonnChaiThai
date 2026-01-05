@@ -6,9 +6,9 @@ on:
       - production
 
 jobs:
-  build-and-deploy:
+  # Jobb 1: Ladda ner beroenden
+  install-dependencies:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,25 +26,101 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Cache dependencies
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
+  # Jobb 2: Kolla Azure PostgreSQL connection
+  check-database:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Check Database Connection
         run: npx tsx scripts/check-db.ts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+  # Jobb 3: Bygga build-mappen från Next.js projektet
+  build:
+    runs-on: ubuntu-latest
+    needs: check-database
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Restore dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Build Application
         run: pnpm build
         env:
-          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }} 
-          # Add other build-time env vars if necessary. 
-          # Note: Secrets are not automatically exposed to client-side bundles unless prefixed with NEXT_PUBLIC_
-          # and explicitly provided here or in the build environment.
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
 
       - name: Prepare Standalone Build
         run: |
           mkdir -p .next/standalone/public
           mkdir -p .next/standalone/.next/static
-          cp -r public/* .next/standalone/public/
+          cp -r public/* .next/standalone/public/ || true
           cp -r .next/static/* .next/standalone/.next/static/
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: nextjs-build
+          path: .next/standalone
+          retention-days: 1
+
+  # Jobb 4: Pusha builden till Azure webapp
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: nextjs-build
+          path: .next/standalone
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
