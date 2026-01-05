@@ -33,7 +33,7 @@ export async function POST(req: Request) {
                 if (items.length === 0) return null;
                 return `KATEGORI: ${cat.name}\n${items.map(item =>
                     `- ${item.name} (${item.price} kr): ${item.description} ` +
-                    `[${item.spiceLevel > 0 ? 'Styrka: ' + item.spiceLevel + '/3' : 'Ej stark'}] ` +
+                    `[${(item.spiceLevel ?? 0) > 0 ? 'Styrka: ' + item.spiceLevel + '/3' : 'Ej stark'}] ` +
                     `${item.isVegan ? '(Vegansk)' : ''} ${item.isVegetarian ? '(Vegetarisk)' : ''}`
                 ).join('\n')}`;
             })
