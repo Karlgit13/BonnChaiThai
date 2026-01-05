@@ -204,7 +204,12 @@ jobs:
                   </rule>
                 </rules>
               </rewrite>
-              <iisnode nodeProcessCommandLine="node.exe" watchedFiles="web.config;*.js" />
+              <iisnode 
+                nodeProcessCommandLine="node.exe" 
+                watchedFiles="web.config;*.js" 
+                loggingEnabled="true"
+                devErrorsEnabled="true"
+              />
             </system.webServer>
           </configuration>
           EOF
