@@ -204,8 +204,19 @@ jobs:
                   </rule>
                 </rules>
               </rewrite>
-              <iisnode nodeProcessCommandLine="node.exe" watchedFiles="web.config;*.js" />
+              <iisnode 
+                nodeProcessCommandLine="node.exe" 
+                watchedFiles="web.config;*.js" 
+                interceptor="&quot;%programfiles%\iisnode\interceptor.js&quot;"
+              />
             </system.webServer>
+            <location path="" overrideMode="Inherit">
+              <system.webServer>
+                <handlers>
+                  <add name="iisnode" path="server.js" verb="*" modules="iisnode" />
+                </handlers>
+              </system.webServer>
+            </location>
           </configuration>
           EOF
           
