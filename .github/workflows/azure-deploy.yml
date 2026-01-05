@@ -147,6 +147,8 @@ jobs:
             .next/static
             public
             package.json
+            server.js
+            node_modules
 
   # 4. Deploy to Azure (Only on Production Push)
   deploy:
@@ -164,6 +166,17 @@ jobs:
         with:
           name: next-app
 
+      - name: Prepare Deployment Package
+        run: |
+          # Copy standalone server to root
+          cp -r .next/standalone/* .
+          # Copy static files
+          cp -r .next/static .next/static 2>/dev/null || mkdir -p .next/static
+          # Copy public files  
+          cp -r public public 2>/dev/null || mkdir -p public
+          # Show structure
+          ls -la
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
@@ -171,4 +184,6 @@ jobs:
           app-name: 'bonnchaithai'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
+          startup-command: 'node server.js'
+
 
