@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "next dev",
         "build": "next build",
-        "start": "node server.js",
+        "start": "next start",
         "lint": "eslint .",
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",
@@ -14,8 +14,7 @@
         "db:seed": "tsx lib/db/seed.ts",
         "db:seed-admin": "tsx lib/db/seed-admin.ts",
         "test": "vitest run",
-        "test:watch": "vitest",
-        "test:db": "tsx scripts/test-db-connection.ts"
+        "test:watch": "vitest"
     },
     "dependencies": {
         "@ai-sdk/google": "^3.0.2",
