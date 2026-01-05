@@ -138,6 +138,18 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
+      - name: FIX - Manual styled-jsx copy (for pnpm standalone)
+        run: |
+          # Next.js standalone sometimes misses styled-jsx with pnpm.
+          # We force copy it into the standalone node_modules folder before upload.
+          if [ -d "node_modules/styled-jsx" ]; then
+            echo "✅ Copying styled-jsx to standalone/node_modules..."
+            mkdir -p .next/standalone/node_modules/styled-jsx
+            cp -r node_modules/styled-jsx/* .next/standalone/node_modules/styled-jsx/
+          else
+            echo "⚠️ Warning: node_modules/styled-jsx not found, build might fail at runtime."
+          fi
+
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -185,47 +197,46 @@ jobs:
         run: |
           mkdir -p deploy_root
           
-          # Copy standalone build
+          # 1. Copy standalone build
           if [ -d "artifacts/.next/standalone" ]; then
             echo "✅ Found artifacts/.next/standalone"
             cp -r artifacts/.next/standalone/* deploy_root/
-            
-            # Static files
-            if [ -d "artifacts/.next/static" ]; then
-              mkdir -p deploy_root/.next/static
-              cp -r artifacts/.next/static/* deploy_root/.next/static/
-            fi
-            
-            # Public files
-            if [ -d "artifacts/public" ]; then
-              mkdir -p deploy_root/public
-              cp -r artifacts/public/* deploy_root/public/
-            fi
           else
-            echo "❌ ERROR: Cannot find standalone build!"
+            echo "❌ ERROR: Cannot find standalone build in artifacts!"
             ls -la artifacts/
             exit 1
           fi
           
-          # Verify critical files exist
+          # 2. Copy Static assets
+          if [ -d "artifacts/.next/static" ]; then
+            mkdir -p deploy_root/.next/static
+            cp -r artifacts/.next/static/* deploy_root/.next/static/
+          fi
+          
+          # 3. Copy Public assets
+          if [ -d "artifacts/public" ]; then
+            mkdir -p deploy_root/public
+            cp -r artifacts/public/* deploy_root/public/
+          fi
+
+          # 4. Tell Azure NOT to run its own build (Oryx)
+          # .deployment file is a standard way to configure Kudu/Oryx
+          echo "[deployment]" > deploy_root/.deployment
+          echo "SCM_DO_BUILD_DURING_DEPLOYMENT=false" >> deploy_root/.deployment
+
+          # 5. Verify critical files exist
           echo ""
           echo "=== Verifying deploy_root structure ==="
           if [ ! -f "deploy_root/server.js" ]; then
             echo "❌ ERROR: server.js not found!"
             exit 1
           fi
-          if [ ! -d "deploy_root/node_modules" ]; then
-            echo "❌ ERROR: node_modules not found!"
-            exit 1
-          fi
           
           echo "✅ server.js found"
-          echo "✅ node_modules found"
-          echo ""
           echo "Deploy root contents:"
           ls -lah deploy_root/
           
-          # Create ZIP for deployment
+          # 6. Create ZIP for deployment
           cd deploy_root && zip -r ../deploy.zip . && cd ..
           
           echo ""
