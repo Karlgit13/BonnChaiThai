@@ -42,7 +42,7 @@ export default function ChatBot() {
         setError(null);
 
         // Add user message
-        const userMessage = { id: Date.now().toString(), role: 'user', content };
+        const userMessage = { id: Date.now().toString(), role: 'user' as const, content };
         setMessages(prev => [...prev, userMessage]);
         setIsLoading(true);
 
@@ -57,7 +57,7 @@ export default function ChatBot() {
 
             // Add placeholder for AI response
             const botMessageId = (Date.now() + 1).toString();
-            setMessages(prev => [...prev, { id: botMessageId, role: 'assistant', content: '' }]);
+            setMessages(prev => [...prev, { id: botMessageId, role: 'assistant' as const, content: '' }]);
 
             const reader = response.body?.getReader();
             const decoder = new TextDecoder();
