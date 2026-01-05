@@ -40,7 +40,7 @@ importers:
         version: 0.33.0(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(@types/react@19.2.7)(postgres@3.4.7)(react@19.0.0)
       framer-motion:
         specifier: ^12.23.26
-        version: 12.23.26(react-dom@19.2.3(react@19.0.0))(react@19.0.0)
+        version: 12.23.26(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       jose:
         specifier: ^6.1.3
         version: 6.1.3
@@ -52,7 +52,7 @@ importers:
         version: 5.1.6
       next:
         specifier: 15.1.1
-        version: 15.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.0.0))(react@19.0.0)
+        version: 15.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       postgres:
         specifier: ^3.4.4
         version: 3.4.7
@@ -63,8 +63,8 @@ importers:
         specifier: ^9.13.0
         version: 9.13.0(react@19.0.0)
       react-dom:
-        specifier: 19.2.3
-        version: 19.2.3(react@19.0.0)
+        specifier: 19.0.0
+        version: 19.0.0(react@19.0.0)
       react-hook-form:
         specifier: ^7.69.0
         version: 7.69.0(react@19.0.0)
@@ -76,7 +76,7 @@ importers:
         version: 6.2.8(openapi-types@12.1.3)
       swagger-ui-react:
         specifier: ^5.31.0
-        version: 5.31.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.0.0))(react@19.0.0)
+        version: 5.31.0(@types/react@19.2.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.6.0
@@ -95,7 +95,7 @@ importers:
         version: 6.9.1
       '@testing-library/react':
         specifier: ^16.3.1
-        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.0.0))(react@19.0.0)
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@types/bcryptjs':
         specifier: ^3.0.0
         version: 3.0.0
@@ -3265,10 +3265,10 @@ packages:
     peerDependencies:
       react: ^15.3.0 || 16 || 17 || 18
 
-  react-dom@19.2.3:
-    resolution: {integrity: sha512-yELu4WmLPw5Mr/lmeEpox5rw3RETacE++JgHqQzd2dg+YbJuat3jH4ingc+WPZhxaoFzdv9y33G+F7Nl5O0GBg==}
+  react-dom@19.0.0:
+    resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
     peerDependencies:
-      react: ^19.2.3
+      react: ^19.0.0
 
   react-hook-form@7.69.0:
     resolution: {integrity: sha512-yt6ZGME9f4F6WHwevrvpAjh42HMvocuSnSIHUGycBqXIJdhqGSPQzTpGF+1NLREk/58IdPxEMfPcFCjlMhclGw==}
@@ -3418,8 +3418,8 @@ packages:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
 
-  scheduler@0.27.0:
-    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
+  scheduler@0.25.0:
+    resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -5199,12 +5199,12 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
-  '@testing-library/react@16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.0.0))(react@19.0.0)':
+  '@testing-library/react@16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@testing-library/dom': 10.4.1
       react: 19.0.0
-      react-dom: 19.2.3(react@19.0.0)
+      react-dom: 19.0.0(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.2.7
       '@types/react-dom': 19.2.3(@types/react@19.2.7)
@@ -6389,14 +6389,14 @@ snapshots:
 
   format@0.2.2: {}
 
-  framer-motion@12.23.26(react-dom@19.2.3(react@19.0.0))(react@19.0.0):
+  framer-motion@12.23.26(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       motion-dom: 12.23.23
       motion-utils: 12.23.6
       tslib: 2.8.1
     optionalDependencies:
       react: 19.0.0
-      react-dom: 19.2.3(react@19.0.0)
+      react-dom: 19.0.0(react@19.0.0)
 
   fs.realpath@1.0.0: {}
 
@@ -6940,7 +6940,7 @@ snapshots:
 
   neotraverse@0.6.18: {}
 
-  next@15.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.0.0))(react@19.0.0):
+  next@15.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@next/env': 15.1.1
       '@swc/counter': 0.1.3
@@ -6949,7 +6949,7 @@ snapshots:
       caniuse-lite: 1.0.30001762
       postcss: 8.4.31
       react: 19.0.0
-      react-dom: 19.2.3(react@19.0.0)
+      react-dom: 19.0.0(react@19.0.0)
       styled-jsx: 5.1.6(@babel/core@7.28.5)(react@19.0.0)
     optionalDependencies:
       '@next/swc-darwin-arm64': 15.1.1
@@ -7198,10 +7198,10 @@ snapshots:
       prop-types: 15.8.1
       react: 19.0.0
 
-  react-dom@19.2.3(react@19.0.0):
+  react-dom@19.0.0(react@19.0.0):
     dependencies:
       react: 19.0.0
-      scheduler: 0.27.0
+      scheduler: 0.25.0
 
   react-hook-form@7.69.0(react@19.0.0):
     dependencies:
@@ -7212,11 +7212,11 @@ snapshots:
       immutable: 3.8.2
       invariant: 2.2.4
 
-  react-immutable-pure-component@2.2.2(immutable@3.8.2)(react-dom@19.2.3(react@19.0.0))(react@19.0.0):
+  react-immutable-pure-component@2.2.2(immutable@3.8.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       immutable: 3.8.2
       react: 19.0.0
-      react-dom: 19.2.3(react@19.0.0)
+      react-dom: 19.0.0(react@19.0.0)
 
   react-inspector@6.0.2(react@19.0.0):
     dependencies:
@@ -7377,7 +7377,7 @@ snapshots:
     dependencies:
       xmlchars: 2.2.0
 
-  scheduler@0.27.0: {}
+  scheduler@0.25.0: {}
 
   semver@6.3.1: {}
 
@@ -7622,7 +7622,7 @@ snapshots:
     transitivePeerDependencies:
       - openapi-types
 
-  swagger-ui-react@5.31.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.0.0))(react@19.0.0):
+  swagger-ui-react@5.31.0(@types/react@19.2.7)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       '@babel/runtime-corejs3': 7.28.4
       '@scarf/scarf': 1.4.0
@@ -7643,9 +7643,9 @@ snapshots:
       react: 19.0.0
       react-copy-to-clipboard: 5.1.0(react@19.0.0)
       react-debounce-input: 3.3.0(react@19.0.0)
-      react-dom: 19.2.3(react@19.0.0)
+      react-dom: 19.0.0(react@19.0.0)
       react-immutable-proptypes: 2.2.0(immutable@3.8.2)
-      react-immutable-pure-component: 2.2.2(immutable@3.8.2)(react-dom@19.2.3(react@19.0.0))(react@19.0.0)
+      react-immutable-pure-component: 2.2.2(immutable@3.8.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-inspector: 6.0.2(react@19.0.0)
       react-redux: 9.2.0(@types/react@19.2.7)(react@19.0.0)(redux@5.0.1)
       react-syntax-highlighter: 16.1.0(react@19.0.0)
