@@ -165,26 +165,26 @@ jobs:
 
       - name: Prepare Deployment Package
         run: |
-          # Next.js standalone already has:
-          # - server.js (built-in Next.js server)
-          # - node_modules (minimal, only what's needed)
-          # - .next/server (compiled pages)
+          # 1. Create a fresh deploy root
+          mkdir -p deploy_root
           
-          # Copy standalone build to deploy folder
-          cp -r .next/standalone deploy
+          # 2. Copy contents of standalone (crucial: copies everything inside)
+          cp -r .next/standalone/* deploy_root/
           
-          # Copy static files into the right place
-          mkdir -p deploy/.next
-          cp -r .next/static deploy/.next/
+          # 3. Ensure static files are in the expected subfolder
+          mkdir -p deploy_root/.next/static
+          cp -r .next/static/* deploy_root/.next/static/
           
-          # Copy public folder
-          cp -r public deploy/ 2>/dev/null || true
+          # 4. Copy public assets if they exist
+          mkdir -p deploy_root/public
+          cp -r public/* deploy_root/public/ 2>/dev/null || true
 
-          # Create web.config for Azure (REQUIRED for Windows App Service)
-          cat > deploy/web.config << 'EOF'
+          # 5. web.config for Azure Windows (iisnode)
+          cat > deploy_root/web.config << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <configuration>
             <system.webServer>
+              <webSocket enabled="false" />
               <handlers>
                 <add name="iisnode" path="server.js" verb="*" modules="iisnode"/>
               </handlers>
@@ -204,18 +204,13 @@ jobs:
                   </rule>
                 </rules>
               </rewrite>
-              <iisnode nodeProcessCommandLine="node.exe" />
+              <iisnode nodeProcessCommandLine="node.exe" watchedFiles="web.config;*.js" />
             </system.webServer>
           </configuration>
           EOF
           
-          # Show package structure
-          echo "=== Deploy root ==="
-          ls -la deploy/
-          echo "=== Deploy .next ==="
-          ls -la deploy/.next/ || true
-          echo "=== Size of deploy folder ==="
-          du -sh deploy/
+          # 6. ZIP the package - This is much more reliable for Windows App Service
+          cd deploy_root && zip -r ../deploy.zip . && cd ..
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -223,6 +218,6 @@ jobs:
         with:
           app-name: 'bonnchaithai'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./deploy
+          package: ./deploy.zip
 
 
