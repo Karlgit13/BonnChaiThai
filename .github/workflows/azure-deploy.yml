@@ -95,7 +95,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-  # 3. Build Application (Only on Production Push)
+  # 3. Build Application (ONLY on Production Push)
   build:
     name: 🏗️ Build Application
     needs: [validate, db-check]
@@ -147,7 +147,7 @@ jobs:
             .next/static
             public
 
-  # 4. Deploy to Azure (Only on Production Push)
+  # 4. Deploy to Azure (ONLY on Production Push)
   deploy:
     name: 🚀 Deploy to Azure
     needs: build
