@@ -168,23 +168,19 @@ jobs:
           # 1. Create a fresh deploy root
           mkdir -p deploy_root
           
-          # 2. Copy contents of standalone
+          # 2. Copy Standalone files (Everything Next.js needs is here)
           cp -r .next/standalone/* deploy_root/
           
-          # 3. Ensure static files are in the expected subfolder
+          # 3. Copy Static & Public to the right subfolders inside standalone
           mkdir -p deploy_root/.next/static
           cp -r .next/static/* deploy_root/.next/static/
-          
-          # 4. Copy public assets if they exist
-          mkdir -p deploy_root/public
           cp -r public/* deploy_root/public/ 2>/dev/null || true
 
-          # 5. web.config for Azure Windows (iisnode) - STABLE VERSION
+          # 4. Minimal stable web.config for iisnode
           cat > deploy_root/web.config << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <configuration>
             <system.webServer>
-              <webSocket enabled="false" />
               <handlers>
                 <add name="iisnode" path="server.js" verb="*" modules="iisnode"/>
               </handlers>
@@ -209,7 +205,7 @@ jobs:
           </configuration>
           EOF
           
-          # 6. ZIP the package
+          # 5. ZIP directly (Azure mounts this as a read-only drive when using Run-From-Package)
           cd deploy_root && zip -r ../deploy.zip . && cd ..
           
           # Debug: Show size
