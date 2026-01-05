@@ -7,10 +7,32 @@ import { Navbar } from '@/components/layout/Navbar';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 
+interface DashboardStats {
+    totalBookings: number;
+    totalRevenue: number;
+    monthlyGrowth: string;
+    popularTime: string;
+}
+
+interface Booking {
+    id: number;
+    customerName: string;
+    customerEmail: string;
+    date: string;
+    timeSlot: string;
+    partySize: number;
+    status: string;
+}
+
+interface DashboardData {
+    stats: DashboardStats;
+    bookings: Booking[];
+}
+
 export default function AdminDashboard() {
     const { user, loading: authLoading } = useAuth();
     const router = useRouter();
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<DashboardData | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -106,7 +128,7 @@ export default function AdminDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
-                                    {data?.bookings.map((booking: any) => (
+                                    {data?.bookings.map((booking) => (
                                         <tr key={booking.id} className="hover:bg-white/5 transition-colors group">
                                             <td className="px-8 py-5">
                                                 <div className="flex items-center gap-3">
@@ -184,7 +206,7 @@ export default function AdminDashboard() {
                             className="bg-gold p-8 rounded-3xl text-black"
                         >
                             <h3 className="text-lg font-serif font-bold mb-2">Familjebesked</h3>
-                            <p className="text-sm opacity-80 mb-6">"Vi har ett stort sällskap bokat för morgondagen. Se till att vi har extra personal förberedda."</p>
+                            <p className="text-sm opacity-80 mb-6">&quot;Vi har ett stort sällskap bokat för morgondagen. Se till att vi har extra personal förberedda.&quot;</p>
                             <Button variant="outline" className="w-full border-black/20 text-black hover:bg-black/5">Hantera Personal</Button>
                         </motion.div>
                     </div>

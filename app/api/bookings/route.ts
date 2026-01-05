@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/db/client';
 import { bookings } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
@@ -143,8 +143,8 @@ export async function GET(request: Request) {
     }
 }
 
-export async function POST(request: Request) {
-    const token = getAuthToken(request as any);
+export async function POST(request: NextRequest) {
+    const token = getAuthToken(request);
     if (!token) return NextResponse.json({ error: 'Unauthorized. Logga in för att boka bord.' }, { status: 401 });
 
     const user = await verifyToken(token);

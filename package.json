@@ -13,7 +13,8 @@
         "db:studio": "drizzle-kit studio",
         "db:seed": "tsx lib/db/seed.ts",
         "db:seed-admin": "tsx lib/db/seed-admin.ts",
-        "test": "vitest"
+        "test": "vitest run",
+        "test:watch": "vitest"
     },
     "dependencies": {
         "@ai-sdk/google": "^3.0.2",

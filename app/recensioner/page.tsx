@@ -353,7 +353,7 @@ export default function ReviewsPage() {
                                         <p className="text-xs text-gold font-bold uppercase tracking-widest">Svar från Bonn Chai</p>
                                     </div>
                                     <p className="text-sm text-zinc-400 italic leading-relaxed">
-                                        "{review.response}"
+                                        &quot;{review.response}&quot;
                                     </p>
                                 </div>
                             )}

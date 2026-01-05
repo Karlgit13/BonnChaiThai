@@ -91,7 +91,7 @@ export default function StoryPage() {
                         viewport={{ once: true }}
                         className="text-3xl md:text-4xl font-serif text-white mb-8 leading-snug"
                     >
-                        "Vi tog inte bara med oss recepten.<br />Vi tog med oss själen."
+                        &quot;Vi tog inte bara med oss recepten.<br />Vi tog med oss själen.&quot;
                     </motion.h3>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -133,7 +133,7 @@ export default function StoryPage() {
                         <h2 className="text-4xl md:text-5xl font-serif text-white mb-8">Bonn Chai Idag</h2>
                         <div className="text-lg leading-loose space-y-6 font-sans">
                             <p>
-                                Idag är <span className="text-white font-bold">Bonn Chai</span> resultatet av denna resa. Vi serverar inte "snabbmat". Vi serverar långkok som fått puttra i 48 timmar. Vi serverar <span className="text-white font-semibold">Svensk Wagyu</span> från utvalda gårdar, men kryddad med handmortlad currypasta gjord på recept som är äldre än oss själva.
+                                Idag är <span className="text-white font-bold">Bonn Chai</span> resultatet av denna resa. Vi serverar inte &quot;snabbmat&quot;. Vi serverar långkok som fått puttra i 48 timmar. Vi serverar <span className="text-white font-semibold">Svensk Wagyu</span> från utvalda gårdar, men kryddad med handmortlad currypasta gjord på recept som är äldre än oss själva.
                             </p>
                             <p>
                                 Det handlar om respekt. Respekt för råvaran, respekt för hantverket och respekt för gästen. Varje tallrik som lämnar vårt kök är en del av vår historia, och när du äter hos oss, blir du en del av den.

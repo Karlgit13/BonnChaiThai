@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { reviews } from "@/lib/db/schema";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { verifyToken, getAuthToken } from "@/lib/auth";
 
 
@@ -18,8 +18,8 @@ export async function GET() {
     }
 }
 
-export async function POST(req: Request) {
-    const token = getAuthToken(req as any);
+export async function POST(req: NextRequest) {
+    const token = getAuthToken(req);
     if (!token) return NextResponse.json({ error: "Obehörig. Logga in för att lämna recension." }, { status: 401 });
 
     const user = await verifyToken(token);

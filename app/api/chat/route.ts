@@ -79,10 +79,10 @@ Svara som en trevlig servitör, men var "to the point".
         });
 
         return result.toTextStreamResponse();
-    } catch (error: any) {
+    } catch (error) {
         console.error('AI API Error:', error);
         return new Response(JSON.stringify({
-            error: error.message || 'Error processing request',
+            error: error instanceof Error ? error.message : 'Error processing request',
             details: error
         }), { status: 500 });
     }

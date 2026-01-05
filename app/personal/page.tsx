@@ -5,8 +5,15 @@ import Image from "next/image";
 import { Navbar } from "@/components/layout/Navbar";
 import { motion } from "framer-motion";
 
+interface StaffMember {
+    name: string;
+    image: string | null;
+    role: string;
+    bio: string;
+}
+
 export default function StaffPage() {
-    const [staff, setStaff] = React.useState<any[]>([]);
+    const [staff, setStaff] = React.useState<StaffMember[]>([]);
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
@@ -77,7 +84,7 @@ export default function StaffPage() {
                         Ett hantverk byggt på kärlek
                     </motion.h2>
                     <p className="text-lg text-zinc-400 leading-relaxed italic">
-                        "Varje person i mitt kök är handplockad, inte bara för sin skicklighet med kniven, utan för sin kärlek till vårt kulturarv. Tillsammans skapar vi inte bara mat, vi berättar en historia."
+                        &quot;Varje person i mitt kök är handplockad, inte bara för sin skicklighet med kniven, utan för sin kärlek till vårt kulturarv. Tillsammans skapar vi inte bara mat, vi berättar en historia.&quot;
                         <span className="block mt-4 text-white font-bold non-italic font-serif">— Chef Somchai</span>
                     </p>
                 </div>

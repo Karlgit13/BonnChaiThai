@@ -47,7 +47,6 @@ export async function GET(request: NextRequest) {
     const date = searchParams.get('date');
 
     try {
-        let query = db.select().from(bookings);
         const conditions = [];
 
         if (search) {
@@ -67,7 +66,7 @@ export async function GET(request: NextRequest) {
             .orderBy(desc(bookings.createdAt));
 
         return NextResponse.json(results);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

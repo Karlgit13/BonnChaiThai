@@ -25,7 +25,7 @@ export async function proxy(request: NextRequest) {
             return NextResponse.redirect(new URL("/login", request.url));
         }
 
-        const userRole = (payload as any).role;
+        const userRole = (payload as { role?: unknown }).role;
 
         // Admin only check
         if (adminOnlyPaths.some(path => pathname.startsWith(path)) && userRole !== "admin") {
@@ -33,7 +33,7 @@ export async function proxy(request: NextRequest) {
         }
 
         return NextResponse.next();
-    } catch (err) {
+    } catch {
         return NextResponse.redirect(new URL("/login", request.url));
     }
 }

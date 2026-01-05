@@ -4,9 +4,15 @@ import { useState, useRef, useEffect, type ChangeEvent, type FormEvent } from 'r
 import { MessageCircle, X, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface Message {
+    id: string;
+    role: 'user' | 'assistant' | 'system';
+    content: string;
+}
+
 export default function ChatBot() {
     // Manual state management to bypass useChat hook issues
-    const [messages, setMessages] = useState<any[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [localInput, setLocalInput] = useState('');
     const [error, setError] = useState<Error | null>(null);

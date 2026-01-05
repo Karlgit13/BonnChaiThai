@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { SignJWT, jwtVerify } from 'jose';
+import { NextRequest } from 'next/server';
+import { SignJWT, jwtVerify, JWTPayload } from 'jose';
 import { cookies } from 'next/headers';
 
 const SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret-for-dev-only');
 
-export async function signToken(payload: any) {
+export async function signToken(payload: JWTPayload) {
     return await new SignJWT(payload)
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
@@ -16,7 +16,7 @@ export async function verifyToken(token: string) {
     try {
         const { payload } = await jwtVerify(token, SECRET);
         return payload;
-    } catch (e) {
+    } catch {
         return null;
     }
 }
