@@ -109,6 +109,9 @@ jobs:
           # Copy static files
           mkdir -p ./deploy/.next/static
           cp -r .next/static/* ./deploy/.next/static/
+          # Copy custom startup script
+          cp startup.sh ./deploy/
+          chmod +x ./deploy/startup.sh
           # Create zip for Azure deployment
           cd ./deploy && zip -r ../deploy.zip . && cd ..
 
