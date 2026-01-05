@@ -168,14 +168,18 @@ jobs:
 
       - name: Prepare Deployment Package
         run: |
-          # Copy standalone server to root
-          cp -r .next/standalone/* .
-          # Copy static files
-          cp -r .next/static .next/static 2>/dev/null || mkdir -p .next/static
-          # Copy public files  
-          cp -r public public 2>/dev/null || mkdir -p public
-          # Show structure
-          ls -la
+          # Create a clean deployment directory
+          mkdir -p deploy
+          # Copy standalone build (includes server.js)
+          cp -r .next/standalone/* deploy/
+          # Copy static assets to the correct location
+          mkdir -p deploy/.next
+          cp -r .next/static deploy/.next/
+          # Copy public folder
+          cp -r public deploy/ || true
+          # Show what we're deploying
+          ls -la deploy/
+          ls -la deploy/.next/
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -183,7 +187,7 @@ jobs:
         with:
           app-name: 'bonnchaithai'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+          package: ./deploy
           startup-command: 'node server.js'
 
 
