@@ -101,7 +101,7 @@ jobs:
         run: |
           # Create deploy directory
           mkdir -p ./deploy
-          # Copy standalone server files
+          # Copy standalone server files (includes node_modules)
           cp -r .next/standalone/* ./deploy/
           # Copy public assets
           mkdir -p ./deploy/public
@@ -109,14 +109,14 @@ jobs:
           # Copy static files
           mkdir -p ./deploy/.next/static
           cp -r .next/static/* ./deploy/.next/static/
-          # Copy package.json for Azure
-          cp package.json ./deploy/
+          # Create zip for Azure deployment
+          cd ./deploy && zip -r ../deploy.zip . && cd ..
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: ./deploy
+          path: ./deploy.zip
           retention-days: 1
 
   # Jobb 4: Pusha builden till Azure webapp
@@ -128,11 +128,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: ./deploy
+          path: ./
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'bonnchaithai'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./deploy
+          package: ./deploy.zip
+          type: zip
