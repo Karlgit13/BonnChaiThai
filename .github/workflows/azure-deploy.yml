@@ -146,9 +146,6 @@ jobs:
             .next/standalone
             .next/static
             public
-            package.json
-            server.js
-            node_modules
 
   # 4. Deploy to Azure (Only on Production Push)
   deploy:
@@ -168,55 +165,28 @@ jobs:
 
       - name: Prepare Deployment Package
         run: |
-          # Create a clean deployment directory
-          mkdir -p deploy
-          # Copy standalone build (includes server.js from standalone)
-          cp -r .next/standalone/* deploy/
-          # Copy static assets to the correct location
+          # Next.js standalone already has:
+          # - server.js (built-in Next.js server)
+          # - node_modules (minimal, only what's needed)
+          # - .next/server (compiled pages)
+          
+          # Copy standalone build to deploy folder
+          cp -r .next/standalone deploy
+          
+          # Copy static files into the right place
           mkdir -p deploy/.next
           cp -r .next/static deploy/.next/
+          
           # Copy public folder
-          cp -r public deploy/ || true
-          # Copy root server.js and package.json
-          cp server.js deploy/
-          cp package.json deploy/
-          # Create web.config for Azure
-          cat > deploy/web.config << 'EOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <configuration>
-            <system.webServer>
-              <handlers>
-                <add name="iisnode" path="server.js" verb="*" modules="iisnode"/>
-              </handlers>
-              <rewrite>
-                <rules>
-                  <rule name="NodeInspector" patternSyntax="ECMAScript" stopProcessing="true">
-                    <match url="^server.js\/debug[\/]?" />
-                  </rule>
-                  <rule name="StaticContent">
-                    <action type="Rewrite" url="public{REQUEST_URI}"/>
-                  </rule>
-                  <rule name="DynamicContent">
-                    <conditions>
-                      <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="True"/>
-                    </conditions>
-                    <action type="Rewrite" url="server.js"/>
-                  </rule>
-                </rules>
-              </rewrite>
-              <iisnode nodeProcessCommandLine="C:\Program Files\nodejs\node.exe" />
-            </system.webServer>
-          </configuration>
-          EOF
-          # Show what we're deploying
-          echo "=== Deploy directory structure ==="
+          cp -r public deploy/ 2>/dev/null || true
+          
+          # Show package structure
+          echo "=== Deploy root ==="
           ls -la deploy/
-          echo "=== .next directory ==="
+          echo "=== Deploy .next ==="
           ls -la deploy/.next/ || true
-          echo "=== Checking for key files ==="
-          test -f deploy/server.js && echo "✓ server.js found" || echo "✗ server.js missing"
-          test -f deploy/package.json && echo "✓ package.json found" || echo "✗ package.json missing"
-          test -f deploy/web.config && echo "✓ web.config found" || echo "✗ web.config missing"
+          echo "=== Size of deploy folder ==="
+          du -sh deploy/
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
