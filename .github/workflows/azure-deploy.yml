@@ -162,6 +162,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: next-app
+          path: .
+
+      - name: Debug - List Downloaded Files
+        run: |
+          echo "=== Root contents ==="
+          ls -R .next/standalone 2>/dev/null || echo "Standalone not found at root"
+          echo "=== Artifact folder check ==="
+          ls -la
 
       - name: Prepare Deployment Package
         run: |
@@ -169,9 +177,10 @@ jobs:
           mkdir -p deploy_root
           
           # 2. Copy Standalone files (Everything Next.js needs is here)
+          # Note: Since path was '.', .next/standalone should be in the root
           cp -r .next/standalone/* deploy_root/
           
-          # 3. Copy Static & Public to the right subfolders inside standalone
+          # 3. Copy Static & Public to the right subfolders
           mkdir -p deploy_root/.next/static
           cp -r .next/static/* deploy_root/.next/static/
           cp -r public/* deploy_root/public/ 2>/dev/null || true
@@ -205,7 +214,7 @@ jobs:
           </configuration>
           EOF
           
-          # 5. ZIP directly (Azure mounts this as a read-only drive when using Run-From-Package)
+          # 5. ZIP directly
           cd deploy_root && zip -r ../deploy.zip . && cd ..
           
           # Debug: Show size
