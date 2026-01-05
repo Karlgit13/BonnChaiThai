@@ -101,8 +101,12 @@ jobs:
         run: |
           # Create deploy directory
           mkdir -p ./deploy
-          # Copy standalone server files (includes node_modules)
+          # Copy standalone server files
           cp -r .next/standalone/* ./deploy/
+          # IMPORTANT: Remove standalone's minimal node_modules
+          rm -rf ./deploy/node_modules
+          # Copy FULL production node_modules
+          cp -r node_modules ./deploy/
           # Copy public assets
           mkdir -p ./deploy/public
           cp -r public/* ./deploy/public/ || true
