@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Ignore server.js (uses CommonJS for Azure)
+    "server.js",
   ]),
 ]);
 
