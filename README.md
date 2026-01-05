@@ -1,42 +1,158 @@
-# BonnChaiThai - Premium Thai Restaurant 🍜
+# BonnChaiThai
 
-Fullstack-applikation för en exklusiv Thai-restaurang i Stockholm. Byggd med Next.js, Azure och AI.
+En fullstack webbapplikation för en thailändsk restaurang i Stockholm. Projektet är byggt som mitt examensarbete för att visa upp kompetens i moderna webteknologier och molninfrastruktur på Azure.
 
-## 🛠 Tech Stack
+## Tech Stack
 
-- ### Frontend/Backend: Next.js 16 (App Router)
-- ### Databas: Azure PostgreSQL + Drizzle ORM
-- ### Styling: Tailwind CSS + Framer Motion
-- ### Forms: React Hook Form + Zod
+**Frontend & Backend**
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- Framer Motion
 
-## 📁 Struktur
+**Databas**
+- Azure PostgreSQL Flexible Server
+- Drizzle ORM
 
-- `app/`: Sidor och API routes.
-- `components/`: UI-komponenter och sektioner.
-- `lib/`: Databas-schema, AI-logik och verktyg.
-- `implementation-planning/`: Roadmap och dokumentation.
-- `public/`: Bilder och statiska filer.
+**Hosting & CI/CD**
+- Azure Web App (Linux Container)
+- Azure Container Registry
+- GitHub Actions
 
-## 🚀 Komma igång
+**Övrigt**
+- Google Gemini AI (chatbot)
+- React Hook Form + Zod
+- Bcrypt (lösenordshashning)
+- JWT (autentisering)
 
-1. ### Installera beroenden:
-   ```bash
-   pnpm install
-   ```
+## Projektstruktur
 
-2. ### Miljövariabler:
-   Skapa en `.env` fil (se `.env.example`).
+```
+├── app/                 # Next.js pages och API routes
+├── components/          # Återanvändbara React-komponenter
+├── lib/                 # Databas-schema, utils och helpers
+│   └── db/             # Drizzle schema och seed-filer
+├── drizzle/            # Genererade migrations
+├── public/             # Statiska filer och bilder
+└── scripts/            # Utility scripts (db check, dev server)
+```
 
-3. ### Databas-setup:
-   ```bash
-   pnpm db:push
-   ```
+## Kom igång
 
-4. ### Kör lokalt:
-   ```bash
-   pnpm dev
-   ```
+### 1. Installation
 
-### 📜 Roadmap & Implementation Planning
+```bash
+pnpm install
+```
 
-Se `Roadmap/Roadmap.md` för detaljerad status.
+### 2. Miljövariabler
+
+Skapa en `.env` fil i root med följande variabler:
+
+```env
+DATABASE_URL=postgresql://user:password@host:5432/database
+GEMINI_API_KEY=your_gemini_api_key
+JWT_SECRET=your_jwt_secret
+```
+
+### 3. Databas Setup
+
+Projektet använder Drizzle ORM för databashantering. Här är de viktigaste kommandona:
+
+**Skapa migrations från schema-ändringar:**
+```bash
+pnpm db:generate
+```
+
+**Kör migrations mot databasen:**
+```bash
+pnpm db:migrate
+```
+
+**Push schema direkt till databasen (utveckling):**
+```bash
+pnpm db:push
+```
+
+**Seeda databasen med testdata:**
+```bash
+pnpm db:seed
+```
+
+Detta skapar:
+- Meny-kategorier och rätter
+- Personal och deras bakgrund
+- Recensioner
+- Admin-användare (email: `admin@bonnchaithai.se`, lösenord: `admin123`)
+
+**Seeda endast admin-användare:**
+```bash
+pnpm db:seed-admin
+```
+
+**Öppna Drizzle Studio (GUI för databasen):**
+```bash
+pnpm db:studio
+```
+
+### 4. Utveckling
+
+Starta utvecklingsservern:
+
+```bash
+pnpm dev
+```
+
+Servern startar på:
+- App: http://localhost:3000
+- Swagger API docs: http://localhost:3000/api-doc
+
+## Deployment
+
+Projektet deployas automatiskt till Azure via GitHub Actions när kod pushas till `production` branchen.
+
+**Deployment flow:**
+1. Kör databas-connection test
+2. Bygger Docker image
+3. Pushar till Azure Container Registry
+4. Deployas till Azure Web App
+
+**Live URL:** https://bonnchaithai123.azurewebsites.net
+
+## Funktioner
+
+- Bokningssystem för bord
+- Interaktiv meny med filter och kategorier
+- Personalpresentation med bakgrundshistorier
+- Recensionssystem
+- Admin-panel för hantering
+- AI-chatbot för kundsupport (Gemini)
+- Swagger API-dokumentation
+
+## Utvecklingsflöde
+
+Vi använder tre branches:
+- `dev` - Aktiv utveckling
+- `main` - Stabil kod
+- `production` - Kod i produktion (triggar deployment)
+
+## Scripts
+
+```bash
+pnpm dev              # Starta dev server
+pnpm build            # Bygga för produktion
+pnpm start            # Starta production build
+pnpm lint             # Kör linting
+pnpm test             # Kör tester
+pnpm test:watch       # Kör tester i watch mode
+pnpm db:generate      # Generera migrations
+pnpm db:migrate       # Kör migrations
+pnpm db:push          # Pusha schema till DB
+pnpm db:seed          # Seeda databasen
+pnpm db:seed-admin    # Seeda endast admin
+pnpm db:studio        # Öppna Drizzle Studio
+```
+
+## Mer information
+
+Se `Roadmap/Roadmap.md` för projektplanering och status.
