@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db/client';
 import { staff } from '@/lib/db/schema';
 import { asc } from 'drizzle-orm';
-import { verifyToken, getAuthToken } from '@/lib/auth';
+import { asc } from 'drizzle-orm';
 
 /**
  * @swagger
@@ -19,7 +19,7 @@ import { verifyToken, getAuthToken } from '@/lib/auth';
  *       401:
  *         description: Obehörig
  */
-export async function GET(request: Request) {
+export async function GET() {
     // Public endpoint for viewing staff
     // Removed auth check to allow public website visitors to see the staff list
     try {

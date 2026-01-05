@@ -7,6 +7,7 @@ import { Navbar } from '@/components/layout/Navbar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ export default function LoginPage() {
                 const data = await res.json();
                 setError(data.error || 'Inloggning misslyckades');
             }
-        } catch (err) {
+        } catch {
             setError('Ett fel inträffade vid inloggning');
         }
     };
@@ -195,11 +196,21 @@ export default function LoginPage() {
                                 )}
                             </div>
 
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/BankID_logo.svg/1200px-BankID_logo.svg.png" className="w-24 mb-6 grayscale opacity-20" alt="BankID" />
+
+
+                            <div className="relative w-24 mb-6 opacity-20 grayscale">
+                                <Image
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/BankID_logo.svg/1200px-BankID_logo.svg.png"
+                                    alt="BankID"
+                                    width={1200}
+                                    height={1200}
+                                    className="w-full h-auto"
+                                />
+                            </div>
                         </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }

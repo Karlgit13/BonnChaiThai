@@ -33,7 +33,7 @@ export default function RegisterPage() {
                 const data = await res.json();
                 setError(data.error || 'Registrering misslyckades');
             }
-        } catch (err) {
+        } catch {
             setError('Ett fel inträffade vid registrering');
         }
     };

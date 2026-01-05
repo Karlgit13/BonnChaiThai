@@ -1,6 +1,6 @@
 import { db } from './client';
 import * as schema from './schema';
-import { nanoid } from 'nanoid';
+
 
 async function main() {
     console.log('🌱 Deleting existing data...');

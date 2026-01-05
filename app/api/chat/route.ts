@@ -12,7 +12,7 @@ export const maxDuration = 30;
 
 import { db } from '@/lib/db/client';
 import { staff, categories, menuItems } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+
 
 export async function POST(req: Request) {
     try {

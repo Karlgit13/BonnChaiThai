@@ -3,7 +3,7 @@ import { db } from '@/lib/db/client';
 import { bookings } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
-import { addWeeks, isAfter, isBefore, startOfDay, parseISO } from 'date-fns';
+import { addWeeks, isAfter, isBefore, startOfDay } from 'date-fns';
 import { verifyToken, getAuthToken } from '@/lib/auth';
 
 const MAX_WEEKS_AHEAD = 8;

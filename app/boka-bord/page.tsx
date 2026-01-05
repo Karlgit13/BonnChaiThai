@@ -38,7 +38,6 @@ type TimeSlot = {
 };
 
 export default function BookingPage() {
-    const [step, setStep] = useState(1);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
     const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
     const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -55,7 +54,6 @@ export default function BookingPage() {
 
     // Confirmation State
     const [bookingSuccess, setBookingSuccess] = useState(false);
-    const [bookingRef, setBookingRef] = useState("");
 
     // Fetch slots when date changes
     useEffect(() => {
@@ -103,7 +101,7 @@ export default function BookingPage() {
             });
 
             if (res.ok) {
-                const data = await res.json();
+                await res.json();
                 setBookingSuccess(true);
                 // In a real app, we'd get the cancellation code from response
             } else {

@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
             .orderBy(desc(users.createdAt));
 
         return NextResponse.json(allUsers);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }

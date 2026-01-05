@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db/client';
 import { bookings } from '@/lib/db/schema';
 import { verifyToken, getAuthToken } from '@/lib/auth';
-import { desc, sql } from 'drizzle-orm';
+import { desc } from 'drizzle-orm';
 
 
 export async function GET(request: NextRequest) {
