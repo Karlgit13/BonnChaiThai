@@ -4,7 +4,6 @@ import { bookings } from '@/lib/db/schema';
 import { eq, and, sql } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import { addWeeks, isAfter, isBefore, startOfDay } from 'date-fns';
-import { verifyToken, getAuthToken } from '@/lib/auth';
 
 const MAX_WEEKS_AHEAD = 8;
 const SEATS_PER_SLOT = 20; // Simplified capacity per slot
@@ -144,11 +143,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: NextRequest) {
-    const token = getAuthToken(request);
-    if (!token) return NextResponse.json({ error: 'Unauthorized. Logga in för att boka bord.' }, { status: 401 });
-
-    const user = await verifyToken(token);
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // NOTE: No authentication required to MAKE a booking - this is a public endpoint
+    // Only admin routes should require auth to VIEW/MANAGE bookings
 
     try {
         const body = await request.json();
