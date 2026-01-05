@@ -117,7 +117,7 @@ Projektet deployas automatiskt till Azure via GitHub Actions när kod pushas til
 3. Pushar till Azure Container Registry
 4. Deployas till Azure Web App
 
-**Live URL:** bonnchaithai123-hjhxfjgeg4e0fqd5.swedencentral-01.azurewebsites.net
+Live URL: [bonnchaithai123-hjhxfjgeg4e0fqd5.swedencentral-01.azurewebsites.net](https://bonnchaithai123-hjhxfjgeg4e0fqd5.swedencentral-01.azurewebsites.net/)
 
 ## Funktioner
 
