@@ -1,13 +1,18 @@
-name: Azure Deployment
+name: Azure Container Deployment
 
 on:
   push:
     branches:
       - production
 
+env:
+  AZURE_WEBAPP_NAME: bonnchaithai123
+  REGISTRY: bonnchaithai.azurecr.io
+  IMAGE_NAME: bonnchaithai-app
+
 jobs:
-  # Jobb 1: Ladda ner beroenden
-  install-dependencies:
+  # Jobb 1: Kolla Azure PostgreSQL connection
+  check-database:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,120 +31,44 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Cache dependencies
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            node_modules
-            ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-
-  # Jobb 2: Kolla Azure PostgreSQL connection
-  check-database:
-    runs-on: ubuntu-latest
-    needs: install-dependencies
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
-
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            node_modules
-            ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-
       - name: Check Database Connection
         run: npx tsx scripts/check-db.ts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-  # Jobb 3: Bygga build-mappen från Next.js projektet
-  build:
+  # Jobb 2: Bygga och pusha Docker image
+  build-and-push:
     runs-on: ubuntu-latest
     needs: check-database
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Log in to Azure Container Registry
+        uses: docker/login-action@v2
         with:
-          node-version: '22'
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
+          password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
         with:
-          version: 9
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            NEXT_PUBLIC_BASE_URL=${{ secrets.NEXT_PUBLIC_BASE_URL }}
 
-      - name: Restore dependencies
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            node_modules
-            ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('pnpm-lock.yaml') }}
-
-      - name: Build Application
-        run: pnpm build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
-
-      - name: Prepare Standalone Build
-        run: |
-          # Create deploy directory
-          mkdir -p ./deploy
-          # Copy standalone server files
-          cp -r .next/standalone/* ./deploy/
-          # IMPORTANT: Remove standalone's minimal node_modules
-          rm -rf ./deploy/node_modules
-          # Copy FULL production node_modules
-          cp -r node_modules ./deploy/
-          # Copy public assets
-          mkdir -p ./deploy/public
-          cp -r public/* ./deploy/public/ || true
-          # Copy static files
-          mkdir -p ./deploy/.next/static
-          cp -r .next/static/* ./deploy/.next/static/
-          # Copy custom startup script
-          cp startup.sh ./deploy/
-          chmod +x ./deploy/startup.sh
-          # Create zip for Azure deployment
-          cd ./deploy && zip -r ../deploy.zip . && cd ..
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: nextjs-build
-          path: ./deploy.zip
-          retention-days: 1
-
-  # Jobb 4: Pusha builden till Azure webapp
+  # Jobb 3: Deploy till Azure Web App
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-and-push
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: nextjs-build
-          path: ./
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'bonnchaithai'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./deploy.zip
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
