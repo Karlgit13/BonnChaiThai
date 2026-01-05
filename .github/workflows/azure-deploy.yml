@@ -55,16 +55,50 @@ jobs:
       - name: Run Tests
         run: pnpm test
 
-      - name: 🔌 Check Azure PostgreSQL Connection
+  # 2. Database Connection Check
+  db-check:
+    name: 🔌 Check Azure PostgreSQL Connection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test Database Connection
         run: pnpm run test:db
-        continue-on-error: false
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-  # 2. Build Application (Only on Production Push)
+  # 3. Build Application (Only on Production Push)
   build:
     name: 🏗️ Build Application
-    needs: validate
+    needs: [validate, db-check]
     if: github.ref == 'refs/heads/production' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -114,7 +148,7 @@ jobs:
             public
             package.json
 
-  # 3. Deploy to Azure (Only on Production Push)
+  # 4. Deploy to Azure (Only on Production Push)
   deploy:
     name: 🚀 Deploy to Azure
     needs: build
@@ -134,6 +168,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'BonnChaiThai-WebApp'
+          app-name: 'bonnchaithai'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
+
