@@ -162,30 +162,88 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: next-app
-          path: .
+          path: ./artifacts
 
-      - name: Debug - List Downloaded Files
+      - name: Debug - Full Artifact Structure
         run: |
-          echo "=== Root contents ==="
-          ls -R .next/standalone 2>/dev/null || echo "Standalone not found at root"
-          echo "=== Artifact folder check ==="
+          echo "=== Root directory ==="
           ls -la
+          echo ""
+          echo "=== Artifacts directory ==="
+          ls -la artifacts/ || echo "No artifacts folder"
+          echo ""
+          echo "=== Looking for .next folder ==="
+          find artifacts -name ".next" -type d 2>/dev/null || echo "No .next found"
+          echo ""
+          echo "=== Looking for server.js ==="
+          find artifacts -name "server.js" -type f 2>/dev/null || echo "No server.js found"
+          echo ""
+          echo "=== Looking for node_modules ==="
+          find artifacts -name "node_modules" -type d 2>/dev/null | head -3 || echo "No node_modules found"
+          echo ""
+          echo "=== Artifacts tree (first 3 levels) ==="
+          find artifacts -maxdepth 3 -type d 2>/dev/null || echo "Cannot show tree"
 
       - name: Prepare Deployment Package
         run: |
-          # 1. Create a fresh deploy root
           mkdir -p deploy_root
           
-          # 2. Copy Standalone files (Everything Next.js needs is here)
-          # Note: Since path was '.', .next/standalone should be in the root
-          cp -r .next/standalone/* deploy_root/
+          # GitHub Actions artifact upload creates this structure:
+          # When uploading:
+          #   path: |
+          #     .next/standalone
+          #     .next/static  
+          #     public
+          # Results in: artifacts/.next/standalone/, artifacts/.next/static/, artifacts/public/
           
-          # 3. Copy Static & Public to the right subfolders
-          mkdir -p deploy_root/.next/static
-          cp -r .next/static/* deploy_root/.next/static/
-          cp -r public/* deploy_root/public/ 2>/dev/null || true
-
-          # 4. Minimal stable web.config for iisnode
+          # Strategy: Check which structure we got and handle accordingly
+          if [ -d "artifacts/.next/standalone" ]; then
+            echo "Found artifacts/.next/standalone - using artifact structure"
+            cp -r artifacts/.next/standalone/* deploy_root/
+            
+            # Static files - merge into deploy_root
+            if [ -d "artifacts/.next/static" ]; then
+              mkdir -p deploy_root/.next/static
+              cp -r artifacts/.next/static/* deploy_root/.next/static/
+            fi
+            
+            # Public files
+            if [ -d "artifacts/public" ]; then
+              mkdir -p deploy_root/public
+              cp -r artifacts/public/* deploy_root/public/
+            fi
+          elif [ -d ".next/standalone" ]; then
+            echo "Found .next/standalone at root - using root structure"
+            cp -r .next/standalone/* deploy_root/
+            
+            mkdir -p deploy_root/.next/static
+            cp -r .next/static/* deploy_root/.next/static/ || true
+            
+            mkdir -p deploy_root/public
+            cp -r public/* deploy_root/public/ 2>/dev/null || true
+          else
+            echo "ERROR: Cannot find standalone build!"
+            echo "Current directory contents:"
+            ls -la
+            exit 1
+          fi
+          
+          # Verify critical files exist
+          echo ""
+          echo "=== Verifying deploy_root structure ==="
+          if [ ! -f "deploy_root/server.js" ]; then
+            echo "ERROR: server.js not found in deploy_root!"
+            exit 1
+          fi
+          if [ ! -d "deploy_root/node_modules" ]; then
+            echo "ERROR: node_modules not found in deploy_root!"
+            exit 1
+          fi
+          echo "✅ server.js found"
+          echo "✅ node_modules found"
+          ls -la deploy_root/
+          
+          # Create web.config
           cat > deploy_root/web.config << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <configuration>
@@ -214,10 +272,11 @@ jobs:
           </configuration>
           EOF
           
-          # 5. ZIP directly
+          # Create ZIP
           cd deploy_root && zip -r ../deploy.zip . && cd ..
           
-          # Debug: Show size
+          echo ""
+          echo "=== Final package ==="
           ls -lh deploy.zip
 
       - name: Deploy to Azure Web App
