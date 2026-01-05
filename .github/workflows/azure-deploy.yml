@@ -55,6 +55,12 @@ jobs:
       - name: Run Tests
         run: pnpm test
 
+      - name: 🔌 Check Azure PostgreSQL Connection
+        run: pnpm run test:db
+        continue-on-error: false
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
   # 2. Build Application (Only on Production Push)
   build:
     name: 🏗️ Build Application
