@@ -168,7 +168,7 @@ jobs:
           # 1. Create a fresh deploy root
           mkdir -p deploy_root
           
-          # 2. Copy contents of standalone (crucial: copies everything inside)
+          # 2. Copy contents of standalone
           cp -r .next/standalone/* deploy_root/
           
           # 3. Ensure static files are in the expected subfolder
@@ -179,7 +179,7 @@ jobs:
           mkdir -p deploy_root/public
           cp -r public/* deploy_root/public/ 2>/dev/null || true
 
-          # 5. web.config for Azure Windows (iisnode)
+          # 5. web.config for Azure Windows (iisnode) - MINIMAL VERSION
           cat > deploy_root/web.config << 'EOF'
           <?xml version="1.0" encoding="utf-8"?>
           <configuration>
@@ -204,18 +204,16 @@ jobs:
                   </rule>
                 </rules>
               </rewrite>
-              <iisnode 
-                nodeProcessCommandLine="node.exe" 
-                watchedFiles="web.config;*.js" 
-                loggingEnabled="true"
-                devErrorsEnabled="true"
-              />
+              <iisnode nodeProcessCommandLine="node.exe" watchedFiles="web.config;*.js" />
             </system.webServer>
           </configuration>
           EOF
           
-          # 6. ZIP the package - This is much more reliable for Windows App Service
+          # 6. ZIP the package
           cd deploy_root && zip -r ../deploy.zip . && cd ..
+          
+          # Debug: Show size
+          ls -lh deploy.zip
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
