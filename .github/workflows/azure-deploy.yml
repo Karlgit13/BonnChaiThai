@@ -99,16 +99,24 @@ jobs:
 
       - name: Prepare Standalone Build
         run: |
-          mkdir -p .next/standalone/public
-          mkdir -p .next/standalone/.next/static
-          cp -r public/* .next/standalone/public/ || true
-          cp -r .next/static/* .next/standalone/.next/static/
+          # Create deploy directory
+          mkdir -p ./deploy
+          # Copy standalone server files
+          cp -r .next/standalone/* ./deploy/
+          # Copy public assets
+          mkdir -p ./deploy/public
+          cp -r public/* ./deploy/public/ || true
+          # Copy static files
+          mkdir -p ./deploy/.next/static
+          cp -r .next/static/* ./deploy/.next/static/
+          # Copy package.json for Azure
+          cp package.json ./deploy/
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build
-          path: .next/standalone
+          path: ./deploy
           retention-days: 1
 
   # Jobb 4: Pusha builden till Azure webapp
@@ -120,11 +128,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build
-          path: .next/standalone
+          path: ./deploy
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'bonnchaithai'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .next/standalone
+          package: ./deploy
