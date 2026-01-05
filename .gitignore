@@ -9,3 +9,4 @@ dist
 .turbo
 .vercel
 .pnpm-debug.log
+tsconfig.tsbuildinfo
