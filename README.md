@@ -1,4 +1,4 @@
-# BonnChaiThai
+# BonnChaiThai - Fullstack Restaurant Platform Roll: Lead Developer (Examensarbete)
 
 En fullstack webbapplikation för en thailändsk restaurang i Stockholm. Projektet är byggt som mitt examensarbete för att visa upp kompetens i moderna webteknologier och molninfrastruktur på Azure.
 
